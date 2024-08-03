@@ -1,35 +1,44 @@
 package com.example.musicapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.musicapp.R;
+import com.example.musicapp.utils.SQLServerConnector;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-    TextView tvTime, tvDuration;
+    TextView tvTime, tvDuration, tvSongName, tvSongTitle;
     SeekBar seekBarTime, seekBarVolume;
     Button btnPlay;
-
     MediaPlayer musicPlayer;
+    String songLinks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +46,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+
         // Cấu hình giao diện người dùng
         setupUI();
+
+
+        Intent intent = getIntent();
+        String songName = intent.getStringExtra("songName");
+        String songTitle = intent.getStringExtra("songTitle");
+        songLinks = intent.getStringExtra("songlink");
+        // Display the song details
+        tvSongName.setText(songName);
+        tvSongTitle.setText(songTitle);
+
 
         // Khởi tạo MediaPlayer
         initializeMediaPlayer();
@@ -62,39 +82,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         seekBarTime = findViewById(R.id.seekBarTime);
         seekBarVolume = findViewById(R.id.seekBarVolume);
         btnPlay = findViewById(R.id.btnPlay);
-
         btnPlay.setOnClickListener(this);
+        tvSongName = findViewById(R.id.tvSongName);
+        tvSongTitle = findViewById(R.id.tvSongTitle);
     }
 
     private void initializeMediaPlayer() {
         musicPlayer = new MediaPlayer();
-        if (1==3) {
-            // Phát từ URL nếu có kết nối mạng
-            try {
-                String url = "https://res.cloudinary.com/dap6ivvwp/video/upload/v1722321113/anhSaoVaBauTroi_m9jbux.mp3";
-                musicPlayer.setDataSource(url);
-                musicPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                musicPlayer.setOnPreparedListener(mp -> {
-                    String duration = millisecondsToString(musicPlayer.getDuration());
-                    tvDuration.setText(duration);
-                    seekBarTime.setMax(musicPlayer.getDuration());
-                });
-                musicPlayer.prepareAsync();
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (songLinks != null) {
+            if (isValidUrl(songLinks)) {
+                Toast.makeText(this, songLinks, Toast.LENGTH_SHORT).show();
+                try {
+                    String url = songLinks;
+                    musicPlayer.setDataSource(url);
+                    musicPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    musicPlayer.setOnPreparedListener(mp -> {
+                        String duration = millisecondsToString(musicPlayer.getDuration());
+                        tvDuration.setText(duration);
+                        seekBarTime.setMax(musicPlayer.getDuration());
+                    });
+                    musicPlayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error loading audio from URL", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                musicPlayer = MediaPlayer.create(this, Integer.parseInt(songLinks));
+                musicPlayer.setLooping(true);
+                musicPlayer.setVolume(0.5f, 0.5f);
+                String duration = millisecondsToString(musicPlayer.getDuration());
+                tvDuration.setText(duration);
+                seekBarTime.setMax(musicPlayer.getDuration());
             }
         } else {
-            // Phát từ tài nguyên local nếu không có kết nối mạng
-            musicPlayer = MediaPlayer.create(this, R.raw.a);
-            musicPlayer.setLooping(true);
-            musicPlayer.setVolume(0.5f, 0.5f);
-            String duration = millisecondsToString(musicPlayer.getDuration());
-            tvDuration.setText(duration);
-            seekBarTime.setMax(musicPlayer.getDuration());
+            Toast.makeText(this, "Invalid song link", Toast.LENGTH_SHORT).show();
         }
         musicPlayer.setLooping(true);
         musicPlayer.setVolume(0.5f, 0.5f);
     }
+
 
     private void configureSeekBars() {
         seekBarVolume.setProgress(50);
@@ -191,4 +217,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             musicPlayer = null;
         }
     }
+
+    private boolean isValidUrl(String urlString) {
+        try {
+            new URL(urlString).toURI();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public int getRawResourceId(String resourceName) {
+        Context context = getApplicationContext();
+        String packageName = context.getPackageName();
+        return context.getResources().getIdentifier(resourceName, "raw", packageName);
+    }
+
 }
