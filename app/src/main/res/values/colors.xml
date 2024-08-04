@@ -5,5 +5,5 @@
     <color name="primary">#3F5185</color>
     <color name="input_login_register">#00FFFF</color>
     <color name="button_login_register">#FFFFFFFF</color>
-    color.
+    <color name="background_forget_password">#FFEB3B</color>
 </resources>
