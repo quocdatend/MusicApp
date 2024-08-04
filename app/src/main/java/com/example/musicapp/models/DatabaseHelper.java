@@ -200,7 +200,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "    NAME TEXT," +
                 "    DETAIL TEXT" +
                 ")");
-
     }
 
     @Override

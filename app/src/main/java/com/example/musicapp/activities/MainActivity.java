@@ -26,6 +26,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.musicapp.R;
+import com.example.musicapp.models.Song;
 import com.example.musicapp.utils.SQLServerConnector;
 
 import java.io.File;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnPlay;
     MediaPlayer musicPlayer;
     String songLinks;
-
+    Song song1;
+    int timemusic = 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,16 +51,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Cấu hình giao diện người dùng
         setupUI();
-
-
+        // nhâận dữ liệu
         Intent intent = getIntent();
-        String songName = intent.getStringExtra("songName");
-        String songTitle = intent.getStringExtra("songTitle");
-        songLinks = intent.getStringExtra("songlink");
-        // Display the song details
-        tvSongName.setText(songName);
-        tvSongTitle.setText(songTitle);
-
+        Bundle bundle = intent.getExtras();
+        if (bundle != null){
+             song1 = (Song) bundle.getSerializable("song");
+            String songName = song1.getName();
+            String songTitle = song1.getTitle();
+            songLinks = song1.getLinkMusic();
+            tvSongName.setText(songName);
+            tvSongTitle.setText(songTitle);
+        }
+        // gửi dữ liệu
 
         // Khởi tạo MediaPlayer
         initializeMediaPlayer();
@@ -88,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initializeMediaPlayer() {
+        if (musicPlayer != null) {
+            musicPlayer.release();
+        }
         musicPlayer = new MediaPlayer();
         if (songLinks != null) {
             if (isValidUrl(songLinks)) {
@@ -161,19 +168,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startUpdateThread() {
         new Thread(() -> {
-            while (musicPlayer != null) {
-                if (musicPlayer.isPlaying()) {
-                    try {
-                        final int current = musicPlayer.getCurrentPosition();
-                        final String elapsedTime = millisecondsToString(current);
-                        runOnUiThread(() -> {
-                            tvTime.setText(elapsedTime);
-                            seekBarTime.setProgress(current);
-                        });
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            while (true) {
+                try {
+                    // Đảm bảo kiểm tra và xử lý trạng thái MediaPlayer trong luồng chính
+                    runOnUiThread(() -> {
+                        if (musicPlayer != null) {
+                            try {
+                                if (musicPlayer.isPlaying()) {
+                                    final int current = musicPlayer.getCurrentPosition();
+                                    final String elapsedTime = millisecondsToString(current);
+                                    tvTime.setText(elapsedTime);
+                                    seekBarTime.setProgress(current);
+                                    timemusic = current;
+                                }
+                            } catch (IllegalStateException e) {
+                                // Xử lý lỗi khi MediaPlayer không hợp lệ
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    Thread.sleep(1000); // Cập nhật mỗi giây
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break; // Dừng luồng khi bị gián đoạn
                 }
             }
         }).start();
@@ -208,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -217,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             musicPlayer = null;
         }
     }
-
     private boolean isValidUrl(String urlString) {
         try {
             new URL(urlString).toURI();
@@ -231,5 +246,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String packageName = context.getPackageName();
         return context.getResources().getIdentifier(resourceName, "raw", packageName);
     }
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(MainActivity.this, ListMusicActivity.class);
+        Song song = song1;
+        Bundle bundle = new Bundle();
+        song.setDuration(String.valueOf(timemusic));
+        bundle.putSerializable("song",song);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        super.onBackPressed(); // Gọi phương thức mặc định để trở về màn hình trước đó
+    }
 }
