@@ -3,4 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#3F5185</color>
+    <color name="input_login_register">#00FFFF</color>
+    <color name="button_login_register">#FFFFFFFF</color>
+    color.
 </resources>
