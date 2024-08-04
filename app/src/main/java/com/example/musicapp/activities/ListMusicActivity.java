@@ -3,6 +3,8 @@ package com.example.musicapp.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
 import com.example.musicapp.R;
 import com.example.musicapp.adapters.SongsAdapter;
@@ -17,6 +20,7 @@ import com.example.musicapp.databinding.ActivityListMusicBinding;
 import com.example.musicapp.databinding.ActivityMainBinding;
 import com.example.musicapp.models.Song;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,18 +29,17 @@ public class ListMusicActivity extends AppCompatActivity {
     ActivityListMusicBinding binding;
     SongsAdapter songsAdapter;
     ArrayList<Song> songs;
-
     FrameLayout frag_bottom_player;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityListMusicBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        frag_bottom_player = findViewById(R.id.frag_bottom_player);
         loadData();
         addEvents();
+        getdatafrommain();
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -56,12 +59,37 @@ public class ListMusicActivity extends AppCompatActivity {
     }
     private void addEvents() {
         binding.lvSong.setOnItemClickListener((parent, view, position, id) -> {
-            Song song = (Song) songsAdapter.getItem(position);
             Intent intent = new Intent(ListMusicActivity.this, MainActivity.class);
-            intent.putExtra("songName", song.getName());
-            intent.putExtra("songTitle", song.getTitle());
-            intent.putExtra("songlink", song.getLinkMusic());
+            Song song = (Song) songsAdapter.getItem(position);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("song",song);
+            intent.putExtras(bundle);
             startActivity(intent);
         });
+    }
+    private void getdatafrommain() {
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        Song song1 = new Song();
+        if (bundle != null){
+             song1 = (Song) bundle.getSerializable("song");
+            Log.i("ádadas",song1.getLinkMusic());
+            NowPlayingFragmentBottom nowPlayingFragmentBottom = new NowPlayingFragmentBottom();
+            Bundle bundle1 = new Bundle();
+            bundle1.putString("songName", song1.getName());
+            bundle1.putString("songLink", song1.getLinkMusic());
+            bundle1.putInt("songTimecurrent", Integer.parseInt(song1.getDuration()));
+            nowPlayingFragmentBottom.setArguments(bundle1);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frag_bottom_player, nowPlayingFragmentBottom)
+                    .commit();
+        }else {
+            hideBottomPlayer();
+        }
+    }
+    private void hideBottomPlayer() {
+        if (frag_bottom_player != null) {
+            frag_bottom_player.setVisibility(View.GONE); // Hoặc View.INVISIBLE nếu bạn chỉ muốn ẩn nhưng vẫn chiếm không gian
+        }
     }
 }
