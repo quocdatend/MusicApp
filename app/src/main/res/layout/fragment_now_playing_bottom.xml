@@ -29,7 +29,7 @@
             android:background="@drawable/ic_next" />
 
         <Button
-            android:id="@+id/btnPlay"
+            android:id="@+id/btnPlay_mini"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
