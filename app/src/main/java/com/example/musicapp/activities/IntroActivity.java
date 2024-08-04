@@ -1,6 +1,7 @@
 package com.example.musicapp.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,9 +24,11 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
-        binding.btnTestDatabase.setOnClickListener(v -> {
-            userAdaptar.addUser("test", "test", "test", "test");
-            Toast.makeText(IntroActivity.this, "User added", Toast.LENGTH_SHORT).show();
+        binding.btnStart.setOnClickListener(v -> {
+
+        });
+        binding.btnRegister.setOnClickListener(v -> {
+
         });
     }
 }

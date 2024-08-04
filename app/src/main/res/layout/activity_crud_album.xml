@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.Crud_album"
+    android:padding="16dp">
+
+    <!-- Input field for Title -->
+    <EditText
+        android:id="@+id/etAlbumTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Album Title" />
+
+    <!-- Input field for Release Date -->
+    <EditText
+        android:id="@+id/etReleaseDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Release Date (yyyy-mm-dd)" />
+
+    <!-- Button to add a new album -->
+    <Button
+        android:id="@+id/btnAddAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Album" />
+
+    <!-- Button to edit an existing album -->
+    <Button
+        android:id="@+id/btnEditAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Album" />
+
+    <!-- Button to delete an album -->
+    <Button
+        android:id="@+id/btnDeleteAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Album" />
+
+    <!-- ListView to display albums -->
+    <ListView
+        android:id="@+id/lvAlbums"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

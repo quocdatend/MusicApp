@@ -16,19 +16,22 @@
         android:theme="@style/Theme.MusicApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ForgetPasswordCheckEmailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.IntroActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activities.ListMusicActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

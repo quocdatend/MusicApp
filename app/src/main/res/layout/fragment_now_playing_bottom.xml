@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".activities.NowPlayingFragmentBottom">
+    tools:context=".fragments.NowPlayingFragmentBottom">
 
     <RelativeLayout
         android:id="@+id/card_bottom_player"
@@ -25,16 +25,16 @@
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/ic_next" />
 
         <Button
-            android:id="@+id/btnPlay"
+            android:id="@+id/btnPlay_mini"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="80dp"
             android:background="@drawable/ic_play" />
 
         <TextView
@@ -50,6 +50,15 @@
             android:maxLines="1"
             android:layout_centerHorizontal="true"
             />
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="0dp"
+            android:background="@drawable/icon_drop" />
+
     </RelativeLayout>
 
 </FrameLayout>

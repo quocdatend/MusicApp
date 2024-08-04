@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".activities.add_music">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Input field for Name -->
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name" />
+
+            <!-- Input field for Title -->
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title" />
+
+            <!-- Input field for Duration -->
+            <EditText
+                android:id="@+id/etDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Duration" />
+
+            <!-- Input field for Thumbnail URL -->
+            <EditText
+                android:id="@+id/etThumbnailUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Thumbnail URL" />
+
+            <!-- Input field for Lyrics -->
+            <EditText
+                android:id="@+id/etLyrics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Lyrics" />
+
+            <!-- Input field for Language -->
+            <EditText
+                android:id="@+id/etLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Language" />
+
+            <!-- Input field for Album ID -->
+            <EditText
+                android:id="@+id/etIdAlbum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Album ID" />
+
+            <!-- Input field for Slink ID -->
+            <EditText
+                android:id="@+id/etIdSlink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Slink ID" />
+
+            <!-- Input field for Style ID -->
+            <EditText
+                android:id="@+id/etIdStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Style ID" />
+
+            <!-- Button to upload music link -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btnUploadLinkMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Upload Music" />
+
+                <Button
+                    android:id="@+id/btnAddMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Add Music" />
+            </LinearLayout>
+
+            <!-- Second row of buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btnEditMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Edit Music" />
+
+                <Button
+                    android:id="@+id/btnDeleteMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Delete Music" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ListView to display music items -->
+    <ListView
+        android:id="@+id/lvSong"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

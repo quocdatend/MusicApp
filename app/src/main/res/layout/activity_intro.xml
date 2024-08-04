@@ -5,16 +5,74 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@drawable/background_intro"
     tools:context=".activities.IntroActivity">
 
     <Button
-        android:id="@+id/btnTestDatabase"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnStart"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:text="Test Database"
+        android:backgroundTint="#0CE7D5"
+        android:text="Start"
+        app:sl_shadowRadius="4dp"
+        app:sl_shadowColor="#AA000000"
+        app:sl_dx="0dp"
+        app:sl_dy="0dp"
+        app:sl_cornerRadius="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.806" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#1B7080"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9"
+        />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="52dp"
+        android:text="Welcome to Music App"
+        android:textColor="#40B19B"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:translationZ="1dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="239dp"
+        android:layout_height="83dp"
+        android:layout_marginStart="172dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_wave" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="171dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="112dp"
+        android:translationZ="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_music_intro" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
