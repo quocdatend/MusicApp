@@ -16,6 +16,12 @@
         android:theme="@style/Theme.MusicApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ForgetPasswordChangePassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ForgetPasswordCheckCodeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ForgetPasswordCheckEmailActivity"
             android:exported="false" />
         <activity

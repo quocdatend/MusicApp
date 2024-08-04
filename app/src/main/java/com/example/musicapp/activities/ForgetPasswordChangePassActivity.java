@@ -9,27 +9,27 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.musicapp.R;
-import com.example.musicapp.databinding.ActivityForgetPasswordCheckEmailBinding;
+import com.example.musicapp.databinding.ActivityForgetPasswordChangePassBinding;
 
-public class ForgetPasswordCheckEmailActivity extends AppCompatActivity {
-    ActivityForgetPasswordCheckEmailBinding binding;
+public class ForgetPasswordChangePassActivity extends AppCompatActivity {
+    ActivityForgetPasswordChangePassBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding = ActivityForgetPasswordCheckEmailBinding.inflate(getLayoutInflater());
+        binding = ActivityForgetPasswordChangePassBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         addEvents();
     }
     private void addEvents() {
-        // Xử lý sự kiện khi người dùng nhấn nút Submit
-        binding.btnSubmit.setOnClickListener(v -> {
-            // Xử lý logic khi người dùng nhấn nút Submit
-        });
         // Xử lý sự kiện khi người dùng nhấn nút Back
         binding.imgBack.setOnClickListener(v -> {
-            // Xử lý logic khi người dùng nhấn nút Back
+        // Xử lý logic khi người dùng nhấn nút Back
             finish();
+        });
+        // Xử lý sự kiện khi người dùng nhấn nút Submit
+        binding.btnUpdate.setOnClickListener(v -> {
+            // Xử lý logic khi người dùng nhấn nút Submit
         });
     }
 }

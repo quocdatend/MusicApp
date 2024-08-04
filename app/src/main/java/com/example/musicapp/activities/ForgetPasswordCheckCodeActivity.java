@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.musicapp.R;
 import com.example.musicapp.databinding.ActivityForgetPasswordCheckEmailBinding;
 
-public class ForgetPasswordCheckEmailActivity extends AppCompatActivity {
+public class ForgetPasswordCheckCodeActivity extends AppCompatActivity {
     ActivityForgetPasswordCheckEmailBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +22,14 @@ public class ForgetPasswordCheckEmailActivity extends AppCompatActivity {
         addEvents();
     }
     private void addEvents() {
-        // Xử lý sự kiện khi người dùng nhấn nút Submit
-        binding.btnSubmit.setOnClickListener(v -> {
-            // Xử lý logic khi người dùng nhấn nút Submit
-        });
         // Xử lý sự kiện khi người dùng nhấn nút Back
         binding.imgBack.setOnClickListener(v -> {
             // Xử lý logic khi người dùng nhấn nút Back
             finish();
+        });
+        // Xử lý sự kiện khi người dùng nhấn nút Submit
+        binding.btnSubmit.setOnClickListener(v -> {
+            // Xử lý logic khi người dùng nhấn nút Submit
         });
     }
 }
