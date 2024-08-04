@@ -65,8 +65,8 @@ public class LoginActivity extends AppCompatActivity {
         // Sử lý sự kiện khi người dùng nhấn link forgot password trong textview
         binding.txtForgotPassword.setOnClickListener(v -> {
             // Xử lý sự kiện khi người dùng nhấn nút quên mật khẩu
-//            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-//            startActivity(intent);
+            Intent intent = new Intent(LoginActivity.this, ForgetPasswordCheckEmailActivity.class);
+            startActivity(intent);
         });
     }
 }
