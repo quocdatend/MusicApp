@@ -15,6 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApp"
         tools:targetApi="31">
+<!--        <activity-->
+<!--            android:name=".activities.add_music"-->
+<!--            android:exported="false" />-->
+<!--        <activity-->
+<!--            android:name=".activities.Crud_album"-->
+<!--            android:exported="false" />-->
+<!--        <activity-->
+<!--            android:name=".activities.edit_Style_Music"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".activities.ForgetPasswordCheckEmailActivity"
             android:exported="false" />
