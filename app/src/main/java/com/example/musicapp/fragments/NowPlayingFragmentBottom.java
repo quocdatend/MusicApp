@@ -1,6 +1,5 @@
-package com.example.musicapp.activities;
+package com.example.musicapp.fragments;
 
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -19,10 +18,11 @@ import com.example.musicapp.R;
 import com.example.musicapp.models.Song;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class NowPlayingFragmentBottom extends Fragment {
     private TextView song_name_miniPlayer;
-    private Button btnPlay;
+    private Button btnPlay , btnClose;
     private MediaPlayer musicPlayer;
     Song song;
     int timecurrent;
@@ -36,12 +36,14 @@ public class NowPlayingFragmentBottom extends Fragment {
         View view = inflater.inflate(R.layout.fragment_now_playing_bottom, container, false);
         song_name_miniPlayer = view.findViewById(R.id.song_name_miniPlayer);
         btnPlay = view.findViewById(R.id.btnPlay_mini);
+        btnClose = view.findViewById(R.id.btnClose);
         // Lấy Bundle từ Intent
         Bundle bundle = getArguments();
         if (bundle != null) {
             song_name_miniPlayer.setText(bundle.getString("songName"));
-            initializeMediaPlayer(bundle.getString("songLink"));
             timecurrent = bundle.getInt("songTimecurrent");
+            Log.i("nakjsdajskh",String.valueOf(timecurrent));
+            initializeMediaPlayer(bundle.getString("songLink"));
             setupOnClickListeners();
         }
 
@@ -52,22 +54,31 @@ public class NowPlayingFragmentBottom extends Fragment {
         if (musicPlayer == null) {
             musicPlayer = new MediaPlayer();
         }
-        if (songLinks != null) {
-            Toast.makeText(getContext(), songLinks, Toast.LENGTH_SHORT).show();
-            try {
-                musicPlayer.setDataSource(songLinks);
-                musicPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                musicPlayer.setOnPreparedListener(mp -> {
-                    mp.seekTo(timecurrent * 1000);
-                    mp.start();
-                });
-                musicPlayer.prepareAsync();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Error loading audio from URL", Toast.LENGTH_SHORT).show();
+        if (isValidUrl(songLinks)) {
+            if (songLinks != null) {
+                Toast.makeText(getContext(), songLinks, Toast.LENGTH_SHORT).show();
+                try {
+                    musicPlayer.setDataSource(songLinks);
+                    musicPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    musicPlayer.setOnPreparedListener(mp -> {
+                        Log.i("askdklajsda",String.valueOf(timecurrent));
+                        mp.seekTo(timecurrent);
+                        mp.start();
+                    });
+                    musicPlayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Error loading audio from URL", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Invalid song link", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(getContext(), "Invalid song link", Toast.LENGTH_SHORT).show();
+        }else {
+            musicPlayer = MediaPlayer.create(getContext(), Integer.parseInt(songLinks));
+            musicPlayer.setOnPreparedListener(mp -> {
+                mp.seekTo(timecurrent);
+                mp.start();
+            });
         }
         musicPlayer.setLooping(true);
     }
@@ -84,6 +95,11 @@ public class NowPlayingFragmentBottom extends Fragment {
                 }
             } else {
                 Log.e("Error", "MediaPlayer is null");
+            }
+        });
+        btnClose.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             }
         });
     }
@@ -104,6 +120,14 @@ public class NowPlayingFragmentBottom extends Fragment {
         if (musicPlayer != null) {
             musicPlayer.release();
             musicPlayer = null;
+        }
+    }
+    private boolean isValidUrl(String urlString) {
+        try {
+            new URL(urlString).toURI();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }

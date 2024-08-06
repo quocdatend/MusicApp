@@ -251,10 +251,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(MainActivity.this, ListMusicActivity.class);
         Song song = song1;
         Bundle bundle = new Bundle();
-        song.setDuration(String.valueOf(timemusic));
         bundle.putSerializable("song",song);
+        bundle.putInt("timeMusic",timemusic);
         intent.putExtras(bundle);
         startActivity(intent);
+        if (musicPlayer != null) {
+            musicPlayer.release();
+            musicPlayer = null;
+        }
         super.onBackPressed(); // Gọi phương thức mặc định để trở về màn hình trước đó
     }
 }

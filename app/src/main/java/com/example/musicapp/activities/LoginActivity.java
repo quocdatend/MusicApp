@@ -14,24 +14,21 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.musicapp.R;
-import com.example.musicapp.adapters.UserAdaptar;
+import com.example.musicapp.adapters.UserAdapter;
 import com.example.musicapp.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
-    UserAdaptar userAdaptar;
+    UserAdapter userAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userAdaptar = new UserAdaptar(this);
+        userAdapter = new UserAdapter(this);
         addEvents();
 
     }
