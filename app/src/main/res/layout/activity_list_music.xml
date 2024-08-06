@@ -29,7 +29,7 @@
         <fragment
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.example.musicapp.activities.NowPlayingFragmentBottom"
+            android:name="com.example.musicapp.fragments.NowPlayingFragmentBottom"
             tools:layout="@layout/fragment_now_playing_bottom" />
     </FrameLayout>
 </RelativeLayout>

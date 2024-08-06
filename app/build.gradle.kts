@@ -29,16 +29,29 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    buildFeatures{
-        viewBinding= true
+    buildFeatures {
+        viewBinding = true
     }
     buildFeatures {
         viewBinding = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/LICENSE-notice.md"
+            excludes += "/META-INF/AL2.0"
+            excludes += "/META-INF/LGPL2.1"
+            excludes += "/META-INF/MANIFEST.MF"
+            excludes += "/META-INF/NOTICE"
+            excludes += "/META-INF/NOTICE-notice.md"
+            excludes += "/META-INF/NOTICE.md"
+        }
+    }
 }
 
 dependencies {
-
+    implementation(libs.android.mail)
+    implementation (libs.android.activation)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

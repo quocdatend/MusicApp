@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.edit_Style_Music"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <!-- Input field for Name -->
+    <EditText
+        android:id="@+id/etStyleName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Style Name" />
+
+    <!-- Input field for Detail -->
+    <EditText
+        android:id="@+id/etStyleDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Style Detail" />
+
+    <!-- Button to add a new style -->
+    <Button
+        android:id="@+id/btnAddStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Style" />
+
+    <!-- Button to edit an existing style -->
+
+    <!-- Button to delete a style -->
+    <Button
+        android:id="@+id/btnDeleteStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Style" />
+
+    <!-- ListView to display styles -->
+    <ListView
+        android:id="@+id/lvStyles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
