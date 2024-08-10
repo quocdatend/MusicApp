@@ -29,11 +29,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Xử lý tạo database nếu cần
+        // add data in role
+        //db.execSQL("INSERT INTO ROLE (ROLE_NAME) VALUES ('Admin'), ('User'), ('Artist')");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Xử lý nâng cấp database nếu cần
+
     }
 
 }

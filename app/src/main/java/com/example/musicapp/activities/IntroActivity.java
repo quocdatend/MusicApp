@@ -21,7 +21,6 @@ import java.nio.file.Paths;
 
 public class IntroActivity extends AppCompatActivity {
     ActivityIntroBinding binding;
-    UserAdapter userAdapter;
     private static final String DATABASE_NAME = "AppMusic.db";
     private static final String DB_PATH = "/databases/";
 
@@ -31,7 +30,6 @@ public class IntroActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityIntroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userAdapter = new UserAdapter(this);
 
         prepareDB();
         addEvents();
