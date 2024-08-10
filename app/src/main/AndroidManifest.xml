@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -14,18 +15,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApp"
-        tools:targetApi="31">
-<!--        <activity-->
-<!--            android:name=".activities.add_music"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".activities.Crud_album"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".activities.edit_Style_Music"-->
-<!--            android:exported="false" />-->
+        tools:targetApi="31" >
+        <activity
+            android:name=".activities.AdminActivity"
+            android:exported="false"
+            android:label="@string/title_activity_admin"
+            android:theme="@style/Theme.MusicApp.NoActionBar" />
+        <activity
+            android:name=".activities.IntroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Crud_album"
+            android:exported="false" />
+        <activity
+            android:name=".activities.edit_Style_Music"
+            android:exported="false" />
         <activity
             android:name=".activities.ForgetPasswordCheckEmailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ForgetPasswordCheckCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ForgetPasswordChangePassActivity"
             android:exported="false" />
         <activity
             android:name=".activities.RegisterActivity"
@@ -40,8 +52,8 @@
             android:name=".activities.ListMusicActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.IntroActivity"
-            android:exported="true">
+            android:name=".activities.add_music"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -6,11 +6,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -20,19 +17,15 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.musicapp.R;
 import com.example.musicapp.models.Song;
-import com.example.musicapp.utils.SQLServerConnector;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvTime, tvDuration, tvSongName, tvSongTitle;

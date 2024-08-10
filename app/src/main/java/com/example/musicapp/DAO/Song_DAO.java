@@ -86,7 +86,6 @@ public class Song_DAO {
         values.put("ID_SLINK", song.getIdSlink());
         values.put("ID_STYLE", song.getIdStyle());
         values.put("Link_Music", song.getLinkMusic());
-
         // Inserting Row
         db.insert("SONGS", null, values);
         db.close(); // Closing database connection

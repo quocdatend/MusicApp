@@ -7,7 +7,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.Crud_album"
-    android:padding="16dp">
+    android:paddingTop="30dp"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
     <!-- Input field for Title -->
     <EditText
