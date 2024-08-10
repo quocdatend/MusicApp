@@ -2,6 +2,7 @@ package com.example.musicapp.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -18,20 +19,35 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.musicapp.DAO.Admin_DAO;
+import com.example.musicapp.DAO.Artist_DAO;
+import com.example.musicapp.DAO.User_DAO;
 import com.example.musicapp.R;
+import com.example.musicapp.adapters.SendEmail;
 import com.example.musicapp.adapters.UserAdapter;
 import com.example.musicapp.databinding.ActivityRegisterBinding;
+import com.example.musicapp.models.DatabaseHelper;
+import com.example.musicapp.models.Users;
+
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
     ActivityRegisterBinding binding;
-    UserAdapter userAdapter;
+    User_DAO userDao;
+    Admin_DAO adminDao;
+    Artist_DAO artistDao;
+    public static DatabaseHelper dbHelper;
+    public static SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userAdapter = new UserAdapter(this);
+        userDao = new User_DAO(this);
+        adminDao = new Admin_DAO(this);
+        artistDao = new Artist_DAO(this);
+        dbHelper = new DatabaseHelper(this);
         addEvents();
     }
     private void setupRegisterLink() {
@@ -100,19 +116,27 @@ public class RegisterActivity extends AppCompatActivity {
                    dialog.show();
                } else {
                    // Kiểm tra username đã tồn tại hay chưa
-                   if(userAdapter.getUserByUsername(username.getText().toString()) == null) {
+                   if(userDao.getUserByUsername(username.getText().toString()).toArray().length != 0 && adminDao.getAdminByName(username.getText().toString()).toArray().length != 0 && artistDao.getArtistByName(username.getText().toString()).toArray().length != 0) {
                        // Hiển thị thông báo lỗi và thay text view lỗi
                        txtError.setText("Username already exists");
                        dialog.show();
                    }
                    // Kiểm tra email đã tồn tại hay chưa
-                   else if(userAdapter.getUserByEmail(email.getText().toString()) == null) {
+                   else if(userDao.getUserByEmail(email.getText().toString()).toArray().length != 0 && adminDao.getAdminByEmail(email.getText().toString()).toArray().length != 0 && artistDao.getArtistByEmail(email.getText().toString()).toArray().length != 0) {
                        // Hiển thị thông báo lỗi và thay text view lỗi
                        txtError.setText("Email already exists");
                        dialog.show();
                    } else {
                        // Thêm người dùng vào database
-                       userAdapter.addUser(username.getText().toString(), password.getText().toString(), email.getText().toString());
+                       SendEmail se = new SendEmail();
+                       String newPass = se.hashPassword(password.getText().toString());
+                       userDao.addUser(username.getText().toString(), newPass, email.getText().toString());
+                       List<Users> userList = userDao.getUserByUsername(username.getText().toString());
+                       db = dbHelper.getWritableDatabase();
+                       // insert data to table user_role
+                       String sql1 = "INSERT INTO USER_ROLE (USER_ID, ROLE_ID) VALUES (?, ?)";
+                       db.execSQL(sql1, new Object[]{userList.get(0).getId(), 2});
+                       finish();
                    }
                }
            }

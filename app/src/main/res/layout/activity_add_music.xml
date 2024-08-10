@@ -11,7 +11,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -42,11 +42,17 @@
                 android:hint="Duration" />
 
             <!-- Input field for Thumbnail URL -->
-            <EditText
-                android:id="@+id/etThumbnailUrl"
+
+            <!-- ImageView to display Thumbnail -->
+            <ImageView
+                android:id="@+id/ivImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Thumbnail URL" />
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Thumbnail Image"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <!-- Input field for Lyrics -->
             <EditText
@@ -83,52 +89,59 @@
                 android:layout_height="wrap_content"
                 android:hint="Style ID" />
 
-            <!-- Button to upload music link -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
-
-                <Button
-                    android:id="@+id/btnUploadLinkMusic"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Upload Music" />
-
-                <Button
-                    android:id="@+id/btnAddMusic"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Add Music" />
-            </LinearLayout>
-
-            <!-- Second row of buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
-
-                <Button
-                    android:id="@+id/btnEditMusic"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Edit Music" />
-
-                <Button
-                    android:id="@+id/btnDeleteMusic"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Delete Music" />
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
+
+    <!-- Buttons outside of ScrollView -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <!-- First row of buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnUploadLinkMusic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Upload Music" />
+
+            <Button
+                android:id="@+id/btnAddMusic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add Music" />
+        </LinearLayout>
+
+        <!-- Second row of buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnEditMusic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Edit Music" />
+
+            <Button
+                android:id="@+id/btnDeleteMusic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Delete Music" />
+        </LinearLayout>
+    </LinearLayout>
 
     <!-- ListView to display music items -->
     <ListView
