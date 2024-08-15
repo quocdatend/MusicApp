@@ -39,7 +39,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit Album" />
-
+    <Button
+        android:id="@+id/AddMusicAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Music Album" />
     <!-- Button to delete an album -->
     <Button
         android:id="@+id/btnDeleteAlbum"

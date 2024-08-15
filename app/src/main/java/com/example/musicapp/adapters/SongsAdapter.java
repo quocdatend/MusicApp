@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.example.musicapp.R;
 import com.example.musicapp.activities.ListMusicActivity;
@@ -19,9 +20,10 @@ import java.util.List;
 
 public class SongsAdapter extends BaseAdapter {
 
-    Activity context;
-    int item_layout;
-    List<Song> songs;
+    private Activity context;
+    private int item_layout;
+    private List<Song> songs;
+    private int selectedPosition = -1; // -1 có nghĩa là không có item nào được chọn
 
     public SongsAdapter(Activity context, int item_layout, List<Song> songs) {
         this.context = context;
@@ -41,27 +43,37 @@ public class SongsAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        if(convertView == null){
+        if (convertView == null) {
             holder = new ViewHolder();
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(item_layout,null);
+            convertView = layoutInflater.inflate(item_layout, null);
             holder.tvName = convertView.findViewById(R.id.tvArtist);
             holder.tvTitle = convertView.findViewById(R.id.tvTitle);
             convertView.setTag(holder);
-        }else {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Song s  = songs.get(position);
+
+        // Cập nhật dữ liệu của item
+        Song s = songs.get(position);
         holder.tvName.setText(s.getTitle());
         holder.tvTitle.setText(s.getName());
+
+
         return convertView;
     }
-    public  static class ViewHolder{
-        TextView tvTitle,tvName;
+
+    public void setSelectedPosition(int position) {
+        this.selectedPosition = position;
+    }
+
+    public static class ViewHolder {
+        TextView tvTitle, tvName;
     }
 }

@@ -19,6 +19,9 @@ public class UserAdapter {
         dbHelper = new DatabaseHelper(context);
     }
 
+    public UserAdapter(Context context, List<Users> users) {
+    }
+
     public void close() {
         dbHelper.close();
     }

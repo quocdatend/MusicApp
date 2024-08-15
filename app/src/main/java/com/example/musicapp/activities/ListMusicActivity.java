@@ -20,6 +20,7 @@ import com.example.musicapp.models.DatabaseHelper;
 import com.example.musicapp.models.Song;
 import com.example.musicapp.DAO.Song_DAO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,9 +60,7 @@ public class ListMusicActivity extends AppCompatActivity {
             List<Song> songs = new ArrayList<>();
             songs = songDao.getAllMusicRecords();
             return songs;
-            // Xử lý danh sách các bài hát
         } else {
-            // Xử lý trường hợp songDao là null
             Log.e("ListMusicActivity", "Song_DAO không được khởi tạo.");
             return null;
         }
@@ -70,8 +69,12 @@ public class ListMusicActivity extends AppCompatActivity {
         binding.lvSong.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(ListMusicActivity.this, MainActivity.class);
             Song song = (Song) songsAdapter.getItem(position);
+            intent.putExtra("position",position);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("song",song);
+            List<Song> songs1 = new ArrayList<>();
+            songs1 = songDao.getAllMusicRecords();
+//            System.out.println(songs1.toString());
+            bundle.putSerializable("songs", (Serializable) songs1);
             intent.putExtras(bundle);
             startActivity(intent);
         });
@@ -81,8 +84,8 @@ public class ListMusicActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         Song song1 = new Song();
         if (bundle != null){
-             song1 = (Song) bundle.getSerializable("song");
-             int timecurrent = bundle.getInt("timeMusic");
+            song1 = (Song) bundle.getSerializable("song");
+            int timecurrent = bundle.getInt("timeMusic");
             Log.i("ádadas",song1.getLinkMusic());
             NowPlayingFragmentBottom nowPlayingFragmentBottom = new NowPlayingFragmentBottom();
             Bundle bundle1 = new Bundle();
@@ -99,7 +102,7 @@ public class ListMusicActivity extends AppCompatActivity {
     }
     private void hideBottomPlayer() {
         if (frag_bottom_player != null) {
-            frag_bottom_player.setVisibility(View.GONE); // Hoặc View.INVISIBLE nếu bạn chỉ muốn ẩn nhưng vẫn chiếm không gian
+            frag_bottom_player.setVisibility(View.GONE);
         }
     }
 }
