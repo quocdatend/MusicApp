@@ -120,8 +120,10 @@ public class LoginActivity extends AppCompatActivity {
                         dialog.show();
                     } else {
                         session = new Session();
+                        session.setCode(userList.get(0).getId());
                         session.setName(username);
                         session.setPassword(password);
+                        session.setEmail(userList.get(0).getEmail());
                         session.setRole(2);
                     }
                 } else if (adminList.toArray().length != 0){
@@ -133,8 +135,10 @@ public class LoginActivity extends AppCompatActivity {
                         dialog.show();
                     } else {
                         session = new Session();
+                        session.setCode(adminList.get(0).getId());
                         session.setName(username);
                         session.setPassword(password);
+                        session.setEmail(adminList.get(0).getEmail());
                         session.setRole(1);
                         Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
                         startActivity(intent);
@@ -149,8 +153,10 @@ public class LoginActivity extends AppCompatActivity {
                         dialog.show();
                     } else {
                         session = new Session();
+                        session.setCode(artistsList.get(0).getId());
                         session.setName(username);
                         session.setPassword(password);
+                        session.setEmail(artistsList.get(0).getEmail());
                         session.setRole(3);
                     }
                 }
