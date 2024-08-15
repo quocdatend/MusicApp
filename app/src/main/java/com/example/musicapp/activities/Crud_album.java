@@ -1,5 +1,6 @@
 package com.example.musicapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,12 +19,13 @@ import com.example.musicapp.adapters.AlbumAdapter;
 import com.example.musicapp.databinding.ActivityCrudAlbumBinding;
 import com.example.musicapp.models.Album;
 import com.example.musicapp.models.DatabaseHelper;
+import com.example.musicapp.models.Song;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Crud_album extends AppCompatActivity {
-
     private ActivityCrudAlbumBinding binding;
     private AlbumAdapter albumAdapter;
     private AlbumDAO albumDAO;
@@ -37,22 +39,16 @@ public class Crud_album extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityCrudAlbumBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // Initialize Database Helper and DAO
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         albumDAO = new AlbumDAO(dbHelper);
-
-        // Initialize UI components and setup events
         setupUI();
         loadData();
         addEventListeners();
     }
-
     private void setupUI() {
         etAlbumTitle = findViewById(R.id.etAlbumTitle);
         etReleaseDate = findViewById(R.id.etReleaseDate);
     }
-
     private void addEventListeners() {
         binding.btnAddAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +61,6 @@ public class Crud_album extends AppCompatActivity {
                 }
             }
         });
-
         binding.btnDeleteAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +88,16 @@ public class Crud_album extends AppCompatActivity {
                 etAlbumTitle.setText(album.getTitle());
                 etReleaseDate.setText(album.getReleaseDate());
                 loadData();
+            }
+        });
+        binding.AddMusicAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Crud_album.this, Edit_Album.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("album", (Serializable) album);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }

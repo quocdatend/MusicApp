@@ -16,20 +16,16 @@ import com.example.musicapp.models.Users;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersViewModel extends AndroidViewModel {
+public class UsersViewModel extends ViewModel {
 
-    private final MutableLiveData<List<Users>> mUsers;
-    private UserAdapter userAdapter;
-
-    public UsersViewModel(@NonNull Application application,MutableLiveData<List<Users>> mUsers) {
-        super(application);
-        this.mUsers = mUsers;
-        mUsers = new MutableLiveData<>();
-        userAdapter = new UserAdapter(application);
-        mUsers.setValue(userAdapter.getAllUsers());
+    private final MutableLiveData<List<Users>> mText;
+    private UsersFragment usersFragment = new UsersFragment();
+    public UsersViewModel() {
+        mText = new MutableLiveData<>();
+        mText.setValue(usersFragment.userAdapters.getAllUsers());
     }
 
     public LiveData<List<Users>> getUsers() {
-        return mUsers;
+        return mText;
     }
 }

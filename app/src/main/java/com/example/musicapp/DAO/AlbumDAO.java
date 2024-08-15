@@ -60,4 +60,20 @@ public class AlbumDAO {
         db.close();
         return rowsAffected > 0; // Returns true if delete was successful, false otherwise
     }
+
+    public boolean AddMusic_Album(int idM, int idA){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("ID_SONG", idM);
+        values.put("ID_ALBUM", idA);
+        long result = db.insert("ALBUM_SONG", null, values);
+        db.close();
+        return result != -1; // Returns true if insert was successful, false otherwise
+    }
+    public boolean deleteAlbum_Song(int albumId,int Musicid) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int rowsAffected = db.delete("ALBUM_SONG", "ID_ALBUM = ? AND ID_SONG = ?", new String[]{String.valueOf(albumId), String.valueOf(Musicid)});
+        db.close();
+        return rowsAffected > 0; // Trả về true nếu xóa thành công, false nếu không
+    }
 }
