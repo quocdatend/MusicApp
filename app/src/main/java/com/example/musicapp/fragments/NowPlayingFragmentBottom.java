@@ -22,10 +22,11 @@ import java.net.URL;
 
 public class NowPlayingFragmentBottom extends Fragment {
     private TextView song_name_miniPlayer;
-    private Button btnPlay , btnClose;
+    private Button btnPlay, btnClose;
     private MediaPlayer musicPlayer;
     Song song;
     int timecurrent;
+
     public NowPlayingFragmentBottom() {
 
     }
@@ -42,11 +43,10 @@ public class NowPlayingFragmentBottom extends Fragment {
         if (bundle != null) {
             song_name_miniPlayer.setText(bundle.getString("songName"));
             timecurrent = bundle.getInt("songTimecurrent");
-            Log.i("nakjsdajskh",String.valueOf(timecurrent));
+            Log.i("nakjsdajskh", String.valueOf(timecurrent));
             initializeMediaPlayer(bundle.getString("songLink"));
             setupOnClickListeners();
         }
-
         return view;
     }
 
@@ -61,7 +61,7 @@ public class NowPlayingFragmentBottom extends Fragment {
                     musicPlayer.setDataSource(songLinks);
                     musicPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     musicPlayer.setOnPreparedListener(mp -> {
-                        Log.i("askdklajsda",String.valueOf(timecurrent));
+                        Log.i("askdklajsda", String.valueOf(timecurrent));
                         mp.seekTo(timecurrent);
                         mp.start();
                     });
@@ -73,12 +73,18 @@ public class NowPlayingFragmentBottom extends Fragment {
             } else {
                 Toast.makeText(getContext(), "Invalid song link", Toast.LENGTH_SHORT).show();
             }
-        }else {
-            musicPlayer = MediaPlayer.create(getContext(), Integer.parseInt(songLinks));
-            musicPlayer.setOnPreparedListener(mp -> {
-                mp.seekTo(timecurrent);
-                mp.start();
-            });
+        } else {
+            try {
+                int resourceId = Integer.parseInt(songLinks);
+                musicPlayer = MediaPlayer.create(getContext(), resourceId);
+                musicPlayer.setOnPreparedListener(mp -> {
+                    mp.seekTo(timecurrent);
+                    mp.start();
+                });
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Invalid song link or resource ID", Toast.LENGTH_SHORT).show();
+            }
         }
         musicPlayer.setLooping(true);
     }
@@ -122,6 +128,7 @@ public class NowPlayingFragmentBottom extends Fragment {
             musicPlayer = null;
         }
     }
+
     private boolean isValidUrl(String urlString) {
         try {
             new URL(urlString).toURI();

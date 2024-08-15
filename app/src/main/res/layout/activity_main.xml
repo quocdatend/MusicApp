@@ -113,6 +113,30 @@
             android:layout_height="20dp"
             android:src="@drawable/ic_volume_up" />
     </LinearLayout>
-
-
+    <LinearLayout
+        android:padding="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="50dp"
+            android:id="@+id/btnfavorate"
+            android:layout_height="50dp"
+            android:src="@drawable/baseline_favorite_border_24"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="50dp"
+            />
+        <ImageView
+            android:id="@+id/btnComment"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/baseline_comment_24"
+            android:layout_marginRight="50dp"
+            />
+        <ImageView
+            android:id="@+id/btnMore"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/baseline_more_horiz_24"
+            />
+    </LinearLayout>
 </LinearLayout>
