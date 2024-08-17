@@ -119,4 +119,21 @@ public class Song implements Serializable {
     public void setLinkMusic(String linkMusic) {
         this.linkMusic = linkMusic;
     }
+
+    @Override
+    public String toString() {
+        return "Song{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", title='" + title + '\'' +
+                ", duration='" + duration + '\'' +
+                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", lyrics='" + lyrics + '\'' +
+                ", language='" + language + '\'' +
+                ", idAlbum=" + idAlbum +
+                ", idSlink=" + idSlink +
+                ", idStyle=" + idStyle +
+                ", linkMusic='" + linkMusic + '\'' +
+                '}';
+    }
 }

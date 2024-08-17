@@ -17,6 +17,12 @@
         android:theme="@style/Theme.MusicApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.PlayingSongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.FindMusic"
+            android:exported="false" />
+        <activity
             android:name=".activities.Edit_Album"
             android:exported="false" />
         <activity
@@ -25,7 +31,7 @@
             android:label="@string/title_activity_admin"
             android:theme="@style/Theme.MusicApp.NoActionBar" />
         <activity
-            android:name=".activities.IntroActivity"
+            android:name=".activities.add_music"
             android:exported="false" />
         <activity
             android:name=".activities.Crud_album"
@@ -55,7 +61,7 @@
             android:name=".activities.ListMusicActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.add_music"
+            android:name=".activities.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

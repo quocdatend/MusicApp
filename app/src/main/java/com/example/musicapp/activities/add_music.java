@@ -81,7 +81,7 @@ public class add_music extends AppCompatActivity {
         config.put("cloud_name", "dap6ivvwp");
         config.put("api_key", "875469923979388");
         config.put("api_secret", "sT_lEC69UilqcB6NB6Fhn6kaZqU");
-        MediaManager.init(this, config);
+//        MediaManager.init(this, config);
         cloudinary = new Cloudinary(config);
         Spinner spinnerStyle = findViewById(R.id.spinnerAlbums);
         setupUI();

@@ -7,29 +7,39 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:padding="16dp"
-    tools:context=".activities.ListMusicActivity">
+    tools:context=".activities.ListMusicActivity"
+    android:fitsSystemWindows="true">
 
     <ListView
         android:id="@+id/lvSong"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/frag_bottom_player"
-      />
+        />
 
     <FrameLayout
         android:id="@+id/frag_bottom_player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_above="@id/footer_navigation"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp">
+
         <fragment
+            android:name="com.example.musicapp.fragments.NowPlayingFragmentBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.example.musicapp.fragments.NowPlayingFragmentBottom"
             tools:layout="@layout/fragment_now_playing_bottom" />
     </FrameLayout>
+
+    <include
+        android:id="@+id/footer_navigation"
+        layout="@layout/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>
