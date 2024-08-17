@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.musicapp.models.Album;
 import com.example.musicapp.models.Song;
+import com.example.musicapp.models.Style;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -190,5 +192,53 @@ public class Song_DAO {
         int rowsAffected = db.delete("FAVORITES", "ID_USER = ? AND ID_SONG = ? ",  new String[]{String.valueOf(idUser), String.valueOf(idMusic)});
         db.close();
         return rowsAffected > 0;
+    }
+    public Album findAlbumBySongId(int songId) {
+        Album album = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT ALBUMS.ID, ALBUMS.TITLE, ALBUMS.RELEASE_DATE " +
+                "FROM ALBUM_SONG " +
+                "JOIN ALBUMS ON ALBUM_SONG.ID_ALBUM = ALBUMS.ID " +
+                "WHERE ALBUM_SONG.ID_SONG = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(songId)});
+        if (cursor.moveToFirst()) {
+            do {
+                album = new Album(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("TITLE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("RELEASE_DATE"))
+                );
+            } while (cursor.moveToNext());
+        }
+        return album;
+    }
+    public List<Song> getAllSongsByUserId(int userId) {
+        List<Song> musicList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT s.* FROM FAVORITES f " +
+                "JOIN SONGS s ON f.ID_SONG = s.ID " +
+                "WHERE f.ID_USER = ?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            do {
+                Song musicItem = new Song(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("TITLE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("DURATION")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("THUMBNAILURL")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("LYRICS")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("LANGUAGE")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_ALBUM")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_SLINK")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_STYLE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("Link_Music"))
+                );
+                musicList.add(musicItem);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return musicList;
     }
 }

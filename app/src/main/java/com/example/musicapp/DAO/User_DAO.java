@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User_DAO {
-    private DatabaseHelper dbHelper;
+    private final DatabaseHelper dbHelper;
     private SQLiteDatabase db;
     public User_DAO(Context context) {
         dbHelper = new DatabaseHelper(context);
@@ -25,7 +25,7 @@ public class User_DAO {
     // get user by username
     public List<Users> getUserByUsername(String name) {
         List<Users> userList = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM USERS WHERE USERNAME = ?", new String[]{name});
         // add all to models users if cursor not null
         if (cursor.moveToFirst()) {
@@ -47,7 +47,7 @@ public class User_DAO {
     // get user by email
     public List<Users> getUserByEmail(String e) {
         List<Users> userList = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM USERS WHERE EMAIL = ?", new String[]{e});
         // add all to models users
         if (cursor.moveToFirst()) {
