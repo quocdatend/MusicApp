@@ -11,11 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cloudinary.android.MediaManager;
 import com.example.musicapp.R;
 import com.example.musicapp.models.Song;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,7 +29,7 @@ public class NowPlayingFragmentBottom extends Fragment {
     private MediaPlayer musicPlayer;
     Song song;
     int timecurrent;
-
+    private ImageView imageView;
     public NowPlayingFragmentBottom() {
 
     }
@@ -38,15 +41,32 @@ public class NowPlayingFragmentBottom extends Fragment {
         song_name_miniPlayer = view.findViewById(R.id.song_name_miniPlayer);
         btnPlay = view.findViewById(R.id.btnPlay_mini);
         btnClose = view.findViewById(R.id.btnClose);
+        imageView = view.findViewById(R.id.bottom_album_art);
         // Lấy Bundle từ Intent
         Bundle bundle = getArguments();
         if (bundle != null) {
-            song_name_miniPlayer.setText(bundle.getString("songName"));
+            Song song1 = (Song) bundle.getSerializable("songInList");
+            song_name_miniPlayer.setText(song1.getName());
             timecurrent = bundle.getInt("songTimecurrent");
             Log.i("nakjsdajskh", String.valueOf(timecurrent));
             initializeMediaPlayer(bundle.getString("songLink"));
             setupOnClickListeners();
+            String fullUrl = song1.getThumbnailUrl().toString();
+            if (fullUrl != null) {
+                int lastSlashIndex = fullUrl.lastIndexOf("/");
+                int lastDotIndex = fullUrl.lastIndexOf(".");
+                if (lastSlashIndex != -1 && lastDotIndex != -1 && lastDotIndex > lastSlashIndex) {
+                    String publicId = fullUrl.substring(lastSlashIndex + 1, lastDotIndex);
+                    String cloudinaryUrl = MediaManager.get().url().generate(publicId);
+                    Picasso.get().load(cloudinaryUrl).into(imageView);
+                } else {
+                    imageView.setImageResource(R.drawable.icon_music);
+                }
+            } else {
+                imageView.setImageResource(R.drawable.icon_music);
+            }
         }
+
         return view;
     }
 
