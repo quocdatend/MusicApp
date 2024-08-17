@@ -109,4 +109,39 @@ public class StyleDAO {
         db.close();
         return rowsAffected > 0;
     }
+    public List<Song> getAllSongsByStyleId(int styleId) {
+        List<Song> songs = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            String query = "SELECT s.* FROM SONGS s " +
+                    "INNER JOIN SONGS_STYLES ss ON s.ID = ss.ID_SONG " +
+                    "WHERE ss.ID_STYLE = ?";
+            cursor = db.rawQuery(query, new String[]{String.valueOf(styleId)});
+            if (cursor.moveToFirst()) {
+                do {
+                    Song song = new Song();
+                    song.setId(cursor.getInt(cursor.getColumnIndexOrThrow("ID")));
+                    song.setName(cursor.getString(cursor.getColumnIndexOrThrow("NAME")));
+                    song.setTitle(cursor.getString(cursor.getColumnIndexOrThrow("TITLE")));
+                    song.setDuration(cursor.getString(cursor.getColumnIndexOrThrow("DURATION")));
+                    song.setThumbnailUrl(cursor.getString(cursor.getColumnIndexOrThrow("THUMBNAILURL")));
+                    song.setLyrics(cursor.getString(cursor.getColumnIndexOrThrow("LYRICS")));
+                    song.setLanguage(cursor.getString(cursor.getColumnIndexOrThrow("LANGUAGE")));
+                    song.setIdAlbum(cursor.getInt(cursor.getColumnIndexOrThrow("ID_ALBUM")));
+                    song.setIdSlink(cursor.getInt(cursor.getColumnIndexOrThrow("ID_SLINK")));
+                    song.setIdStyle(cursor.getInt(cursor.getColumnIndexOrThrow("ID_STYLE")));
+                    song.setLinkMusic(cursor.getString(cursor.getColumnIndexOrThrow("Link_Music")));
+                    songs.add(song);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return songs;
+    }
 }

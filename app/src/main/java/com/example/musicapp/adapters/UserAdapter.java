@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.musicapp.models.DatabaseHelper;
 import com.example.musicapp.models.Users;
 
+import java.security.AccessControlContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +20,6 @@ public class UserAdapter {
         dbHelper = new DatabaseHelper(context);
     }
 
-    public UserAdapter(Context context, List<Users> users) {
-    }
-
     public void close() {
         dbHelper.close();
     }
@@ -29,7 +27,7 @@ public class UserAdapter {
     // get all users from model users
     public List<Users> getAllUsers() {
         List<Users> userList = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM USERS", null);
         // add all to models users
         if (cursor.moveToFirst()) {

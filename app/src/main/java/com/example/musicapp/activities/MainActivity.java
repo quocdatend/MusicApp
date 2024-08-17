@@ -1,337 +1,203 @@
 package com.example.musicapp.activities;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.SeekBar;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.MarginPageTransformer;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.android.MediaManager;
+import com.example.musicapp.DAO.AlbumDAO;
 import com.example.musicapp.DAO.Song_DAO;
 import com.example.musicapp.R;
+import com.example.musicapp.adapters.CategoryAdapter;
+import com.example.musicapp.adapters.SliderAdapter;
+import com.example.musicapp.category.Category;
 import com.example.musicapp.databinding.ActivityMainBinding;
+import com.example.musicapp.models.Album;
 import com.example.musicapp.models.DatabaseHelper;
 import com.example.musicapp.models.Song;
+import com.example.musicapp.utils.OnCategoryClickListener;
 
-import java.io.IOException;
-import java.net.URL;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private TextView tvTime, tvDuration, tvSongName, tvSongTitle;
-    private SeekBar seekBarTime, seekBarVolume;
-    private Button btnPlay;
-    private MediaPlayer musicPlayer;
-    private String songLinks;
-    private Song currentSong;
-    private int timemusic = 0;
-    private ActivityMainBinding binding;
-    private List<Song> songs;
-    private int position;
-    private boolean isFavorite = false;
+
+public class MainActivity extends AppCompatActivity implements OnCategoryClickListener {
+    private RecyclerView rcvCategory;
+    private CategoryAdapter categoryAdapter;
+    private ViewPager2 mviewPager2;
+    private List<Slider> mListSlider;
+    private Handler mhandler = new Handler(Looper.myLooper());
+    ActivityMainBinding binding;
+    private Cloudinary cloudinary;
+    private TextView txt_MusicForYou;
+    private AlbumDAO albumDAO;
+    private Runnable mrunnable = new Runnable() {
+        @Override
+        public void run() {
+            int currentPosition = mviewPager2.getCurrentItem();
+            if (currentPosition == mListSlider.size() - 1) {
+                mviewPager2.setCurrentItem(0);
+            } else {
+                mviewPager2.setCurrentItem(currentPosition + 1);
+            }
+        }
+    };
     private Song_DAO songDao;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         songDao = new Song_DAO(dbHelper);
+        albumDAO = new AlbumDAO(dbHelper);
+        mviewPager2 = findViewById(R.id.view_paper_2);
+        mListSlider = getListSlider();
+        SliderAdapter sliderAdapter = new SliderAdapter(mListSlider);
+        mviewPager2.setAdapter(sliderAdapter);
+        mviewPager2.setOffscreenPageLimit(3);
+        mviewPager2.setClipToPadding(false);
+        mviewPager2.setClipChildren(false);
 
-        setupUI();
-        getDataFromList();
-        initializeMediaPlayer();
-        configureSeekBars();
-        startUpdateThread();
-        addEventListeners();
-        updateSongInfo();
-    }
+        Map<String, String> config = new HashMap<>();
+        config.put("cloud_name", "dap6ivvwp");
+        config.put("api_key", "875469923979388");
+        config.put("api_secret", "sT_lEC69UilqcB6NB6Fhn6kaZqU");
+        MediaManager.init(this, config);
 
-    private void updateSongInfo() {
-        currentSong = songs.get(position);
-        tvSongName.setText(currentSong.getName());
-        tvSongTitle.setText(currentSong.getTitle());
-        updateFavoriteButtonStatus();
-        prepareMediaPlayer();
-    }
-
-    private void updateFavoriteButtonStatus() {
-        isFavorite = songDao.checkfavMusic(1, currentSong.getId());
-        Log.e("isFavorite",String.valueOf(isFavorite));
-        binding.btnfavorate.setImageResource(isFavorite ? R.drawable.baseline_favorite_24 : R.drawable.baseline_favorite_border_24);
-    }
-
-    private void getDataFromList() {
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-
-        if (bundle != null) {
-            position = intent.getIntExtra("position", 0);
-            songs = (ArrayList<Song>) bundle.getSerializable("songs");
-
-            if (songs != null) {
-                currentSong = getCurrentSong();
-                updateSongInfo();
-            } else {
-                Log.e("MainActivity", "Songs list is null");
-            }
-        }
-    }
-
-    private Song getCurrentSong() {
-        return songs.get(position);
-    }
-
-    private void addEventListeners() {
-        binding.btnNext.setOnClickListener(v -> switchSong(1));
-        binding.btnback.setOnClickListener(v -> switchSong(-1));
-        binding.btnfavorate.setOnClickListener(new View.OnClickListener() {
+        cloudinary = new Cloudinary(config);
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new MarginPageTransformer(40));
+        mviewPager2.setPageTransformer(compositePageTransformer);
+        mviewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onClick(View v) {
-                if (isFavorite == true){
-                    songDao.deleteFavorate_Song(1,currentSong.getId());
-                }else {
-                    songDao.addfavMusic(1,currentSong.getId());
-                }
-                updateFavoriteButtonStatus();
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                mhandler.removeCallbacks(mrunnable);
+                mhandler.postDelayed(mrunnable,2000);
             }
         });
+        rcvCategory = findViewById(R.id.rcv_category);
+        categoryAdapter = new CategoryAdapter(this, this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        rcvCategory.setLayoutManager(linearLayoutManager);
+        categoryAdapter.setData(getListCategory());
+        rcvCategory.setAdapter(categoryAdapter);
+        txt_MusicForYou = findViewById(R.id.txt_MusicForYou);
+        initbutonView();
     }
 
-    private void switchSong(int direction) {
-        if (musicPlayer != null) {
-            if (musicPlayer.isPlaying()) {
-                musicPlayer.stop();
+
+    private List<Category> getListCategory() {
+        List<Category> listCategory = new ArrayList<>();
+        List<Song> listMusic = new ArrayList<>();
+        List<Song> listMusicbyAlbum = new ArrayList<>();
+        listMusic = songDao.getAllMusicRecords();
+        List<Album> albums = albumDAO.getaddAlbum();
+        listCategory.add(new Category("Your Favorite Music", listMusic));
+        listCategory.add(new Category("Recommend For You", listMusic));
+        listCategory.add(new Category("Top Album ", listMusic));
+        for (Album album: albums){
+            listMusicbyAlbum = songDao.getAllMusicByAlbumId(album.getId());
+            if (listMusicbyAlbum.size() > 0 ){
+                listCategory.add(new Category("Best Of " + album.getTitle(), listMusicbyAlbum));
             }
-            musicPlayer.release();
-            musicPlayer = null;
         }
-        position = (position + direction + songs.size()) % songs.size();
-        updateSongInfo();
-        initializeMediaPlayer();
-        configureSeekBars();
-        if (musicPlayer != null) {
-            musicPlayer.start();
-        }
-        seekBarTime.setMax(musicPlayer.getDuration());
-        startUpdateThread();
+        return listCategory;
     }
 
-    private void setupUI() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        tvTime = findViewById(R.id.tvTime);
-        tvDuration = findViewById(R.id.tvDuration);
-        seekBarTime = findViewById(R.id.seekBarTime);
-        seekBarVolume = findViewById(R.id.seekBarVolume);
-        btnPlay = findViewById(R.id.btnPlay);
-        btnPlay.setOnClickListener(this);
-        tvSongName = findViewById(R.id.tvSongName);
-        tvSongTitle = findViewById(R.id.tvSongTitle);
-    }
-
-    private void initializeMediaPlayer() {
-        if (musicPlayer != null) {
-            musicPlayer.release();
-        }
-        musicPlayer = new MediaPlayer();
-        prepareMediaPlayer();
-    }
-
-    private void prepareMediaPlayer() {
-        if (musicPlayer == null) return;
-
-        musicPlayer.reset();
-        songLinks = currentSong.getLinkMusic();
-
-        if (songLinks != null) {
-            try {
-                if (isValidUrl(songLinks)) {
-                    musicPlayer.setDataSource(songLinks);
-                    musicPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    musicPlayer.setOnPreparedListener(mp -> {
-                        String duration = millisecondsToString(mp.getDuration());
-                        tvDuration.setText(duration);
-                        seekBarTime.setMax(mp.getDuration());
-                        musicPlayer.start();
-                    });
-                    musicPlayer.prepareAsync();
-                    musicPlayer.start();
-                    btnPlay.setBackgroundResource(R.drawable.ic_pause);
-
-
-                } else {
-                    int resourceId = getRawResourceId(songLinks);
-                    musicPlayer = MediaPlayer.create(this, resourceId);
-                    musicPlayer.setLooping(true);
-                    musicPlayer.setVolume(0.5f, 0.5f);
-                    String duration = millisecondsToString(musicPlayer.getDuration());
-                    tvDuration.setText(duration);
-                    seekBarTime.setMax(musicPlayer.getDuration());
-                    musicPlayer.start();
-                    btnPlay.setBackgroundResource(R.drawable.ic_pause);
-
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Error loading audio from URL", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Invalid song link", Toast.LENGTH_SHORT).show();
-        }
-
-        musicPlayer.setLooping(true);
-        musicPlayer.setVolume(0.5f, 0.5f);
-    }
-
-    private void configureSeekBars() {
-        seekBarVolume.setProgress(50);
-        seekBarVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean isFromUser) {
-                if (isFromUser) {
-                    float volume = progress / 100f;
-                    musicPlayer.setVolume(volume, volume);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-        seekBarTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean isFromUser) {
-                if (isFromUser) {
-                    musicPlayer.seekTo(progress);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-    }
-
-    private void startUpdateThread() {
-        new Thread(() -> {
-            while (true) {
-                try {
-                    runOnUiThread(() -> {
-                        if (musicPlayer != null && musicPlayer.isPlaying()) {
-                            int current = musicPlayer.getCurrentPosition();
-                            String elapsedTime = millisecondsToString(current);
-                            tvTime.setText(elapsedTime);
-                            seekBarTime.setProgress(current);
-                            timemusic = current;
-                        }
-                    });
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    break;
-                }
-            }
-        }).start();
-    }
-
-    private String millisecondsToString(int time) {
-        int minutes = time / 1000 / 60;
-        int seconds = time / 1000 % 60;
-        return String.format("%d:%02d", minutes, seconds);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-            return networkCapabilities != null && (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
-        }
-        return false;
+    private List<Slider> getListSlider() {
+        List<Slider> list = new ArrayList<>();
+        list.add(new Slider(R.drawable.slider_1));
+        list.add(new Slider(R.drawable.slider_2));
+        list.add(new Slider(R.drawable.slider_3));
+        list.add(new Slider(R.drawable.slider_4));
+        return list;
     }
 
     @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.btnPlay) {
-            if (musicPlayer.isPlaying()) {
-                musicPlayer.pause();
-                btnPlay.setBackgroundResource(R.drawable.ic_play);
-            } else {
-                musicPlayer.start();
-                btnPlay.setBackgroundResource(R.drawable.ic_pause);
-            }
-        }
+    protected void onPause() {
+        super.onPause();
+        mhandler.removeCallbacks(mrunnable);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (musicPlayer != null) {
-            musicPlayer.release();
-            musicPlayer = null;
-        }
+    protected void onResume() {
+        super.onResume();
+        mhandler.postDelayed(mrunnable, 2000);
     }
 
-    private boolean isValidUrl(String urlString) {
-        try {
-            new URL(urlString).toURI();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public int getRawResourceId(String resourceName) {
-        Context context = getApplicationContext();
-        return context.getResources().getIdentifier(resourceName, "raw", context.getPackageName());
-    }
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(MainActivity.this, ListMusicActivity.class);
-        Song song = currentSong;
+    public void onCategoryClick(Category category) {
+        // Handle the category click event here
+        List<Song> categorysong = category.getMusic();
+        Intent intent = new Intent(this, ListMusicActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("song", song);
-        bundle.putInt("timeMusic", timemusic);
+        bundle.putSerializable("listsong", (Serializable) categorysong);
         intent.putExtras(bundle);
         startActivity(intent);
-        if (musicPlayer != null) {
-            musicPlayer.release();
-            musicPlayer = null;
-        }
-        super.onBackPressed(); // Gọi phương thức mặc định để trở về màn hình trước đó
+    }
+
+    @Override
+    public void onMusicClick(Song song) {
+        Intent intent = new Intent(MainActivity.this, PlayingSongActivity.class);
+        intent.putExtra("position", song.getId());
+        Bundle bundle = new Bundle();
+        List<Song> songs1 = new ArrayList<>();
+        songs1 = songDao.getAllMusicRecords();
+        bundle.putSerializable("songs", (Serializable) songs1);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public void initbutonView() {
+        ViewPager2 viewPager2 = findViewById(R.id.view_paper_2);
+        RecyclerView rcvCategory = findViewById(R.id.rcv_category);
+        ImageButton btnHome = findViewById(R.id.btnHome);
+        ImageButton btnBrowser = findViewById(R.id.btnBrowser);
+        ImageButton btnSearch = findViewById(R.id.btnSearch);
+        ImageButton btnLibrary = findViewById(R.id.btnLibrary);
+
+        btnHome.setColorFilter(getResources().getColor(R.color.black));
+
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
+        btnBrowser.setOnClickListener(v -> {
+            List<Song> categorysong = songDao.getAllSongsByUserId(1);
+            Intent intent = new Intent(this, ListMusicActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("listsong", (Serializable) categorysong);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(this, FindMusic.class);
+            startActivity(intent);
+        });
+        btnLibrary.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ListMusicActivity.class);
+            startActivity(intent);
+        });
     }
 }
