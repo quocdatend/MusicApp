@@ -4,19 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".activities.ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnArtists"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FF5722"
+                android:text="0 Artists"
+                android:textSize="22sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnUsers"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00BCD4"
+                android:text="0 Users"
+                android:textSize="22sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnSongs"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FF9800"
+                android:text="0 Songs"
+                android:textSize="22sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnAlbums"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#03A9F4"
+                android:text="0 Albums"
+                android:textSize="22sp"/>
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
