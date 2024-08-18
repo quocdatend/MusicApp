@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                         session.setEmail(userList.get(0).getEmail());
                         session.setRole(2);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        SessionManager.getInstance().clearSession();
                         SessionManager.getInstance().setSession(session);
                         startActivity(intent);
                         finish();
@@ -147,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         session.setEmail(adminList.get(0).getEmail());
                         session.setRole(1);
                         Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                        SessionManager.getInstance().clearSession();
                         SessionManager.getInstance().setSession(session);
                         startActivity(intent);
                         finish();
@@ -166,6 +168,7 @@ public class LoginActivity extends AppCompatActivity {
                         session.setEmail(artistsList.get(0).getEmail());
                         session.setRole(3);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        SessionManager.getInstance().clearSession();
                         SessionManager.getInstance().setSession(session);
                         startActivity(intent);
                         finish();
