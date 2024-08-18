@@ -47,7 +47,6 @@ public class ProfileActivity extends AppCompatActivity {
     Session session;
     private Cloudinary cloudinary;
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ActivityResultLauncher<Intent> laun;
     Uri uri;
     private boolean check_user = false;
     @Override
@@ -78,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
             binding.txtIsAuthor.setText("Bạn đã là nhà sáng tác!");
             // close event click txtIsAuthor
             binding.txtIsAuthor.setOnClickListener(null);
-            String fullUrl = user.getAvatarUrl();
+            String fullUrl = artist.getAvatar();
             if (fullUrl != null) {
                 int lastSlashIndex = fullUrl.lastIndexOf("/");
                 int lastDotIndex = fullUrl.lastIndexOf(".");
@@ -145,11 +144,11 @@ public class ProfileActivity extends AppCompatActivity {
                     Users user = userDao.getUserByEmail(session.getEmail()).get(0);
                     // copy account user to artist
                     artistDao.addArtist(user.getUsername(), user.getEmail(), user.getPassword(), user.getAvatarUrl());
-                    // add role user
+                    // add role Artist
                     artistDao.addRoleArtist(artistDao.getArtistByEmail(session.getEmail()).get(0).getId(), 3);
                     // delete role user
                     userDao.deleteUserRoleByUserId(user.getId());
-                    // delete album and comment of user if exist
+                    // delete album, comment,... of user if exist
 
                     // TO DO
 
