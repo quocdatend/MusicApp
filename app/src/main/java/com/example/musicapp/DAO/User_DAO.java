@@ -66,4 +66,23 @@ public class User_DAO {
         db.close();
         return userList;
     }
+    // delete user by id
+    public void deleteUserById(int id) {
+        db = dbHelper.getWritableDatabase();
+        db.delete("USERS", "ID = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+    // delete user role by userId
+    public void deleteUserRoleByUserId(int userId) {
+        db = dbHelper.getWritableDatabase();
+        db.delete("USER_ROLE", "USER_ID = ?", new String[]{String.valueOf(userId)});
+        db.close();
+    }
+    // update avatar user
+    public void updateAvatarUser(int userId, String avatarUrl) {
+        db = dbHelper.getWritableDatabase();
+        db.execSQL("UPDATE USERS SET AVATAR_URL = ? WHERE ID = ?", new Object[]{avatarUrl, userId});
+        db.close();
+    }
+
 }

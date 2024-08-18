@@ -75,4 +75,26 @@ public class Artist_DAO {
         db.close();
         return artistList;
     }
+
+    // add Artist
+    public  void addArtist(String name, String email, String password, String imageUrl) {
+        db = dbHelper.getWritableDatabase();
+        String sql = "INSERT INTO ARTISTS (NAME, EMAIL, PASS, BIOGRAPHY, STAGE_NAME, NATIONALITY, DEBUG_YEAR, ALBUMS_COUNT, WEBSITE, GENRE_ID, AVATAR) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        db.execSQL(sql, new Object[]{name, email, password, null, null, null, null, 0, null, 0, imageUrl});
+        db.close();
+    }
+
+    // add Role Artist
+    public void addRoleArtist(int artistId, int roleId) {
+        db = dbHelper.getWritableDatabase();
+        String sql = "INSERT INTO ARTIST_ROLE (ID_ARTIST, ID_ROLE) VALUES (?, ?)";
+        db.execSQL(sql, new Object[]{artistId, roleId});
+        db.close();
+    }
+    // update avatar artist
+    public void updateAvatarArtist(int artistId, String imageUrl) {
+        db = dbHelper.getWritableDatabase();
+        String sql = "UPDATE ARTISTS SET AVATAR = ? WHERE ID = ?";
+        db.execSQL(sql, new Object[]{imageUrl, artistId});
+    }
 }
