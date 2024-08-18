@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
 public class MainActivity extends AppCompatActivity implements OnCategoryClickListener {
     private RecyclerView rcvCategory;
     private CategoryAdapter categoryAdapter;
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements OnCategoryClickLi
         }
     };
     private Song_DAO songDao;
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
