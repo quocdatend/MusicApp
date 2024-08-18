@@ -3,6 +3,7 @@ package com.example.musicapp.activities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -19,13 +20,13 @@ import com.example.musicapp.R;
 import com.example.musicapp.databinding.ActivityProfileBinding;
 import com.example.musicapp.models.Artists;
 import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.example.musicapp.models.Users;
 
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
     ActivityProfileBinding binding;
-    private static LoginActivity loginActivity;
     User_DAO userDao;
     Artist_DAO artistDao;
     Session session;
@@ -35,10 +36,10 @@ public class ProfileActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        loginActivity = new LoginActivity();
         userDao = new User_DAO(this);
         artistDao = new Artist_DAO(this);
-        session = loginActivity.session;
+        Intent intent = getIntent();
+        session = SessionManager.getInstance().getSession();
         addEvents();
         loadData();
     }
