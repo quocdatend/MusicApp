@@ -3,8 +3,12 @@ package com.example.musicapp.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.musicapp.R;
+import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -21,11 +25,11 @@ public class AdminActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityAdminBinding binding;
-
+    Session session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        session = SessionManager.getInstance().getSession();
         binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -40,6 +44,12 @@ public class AdminActivity extends AppCompatActivity {
         });
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+        // set nav header admin
+        View headerView = navigationView.getHeaderView(0);
+        TextView txtName = headerView.findViewById(R.id.txtName);
+        TextView txtEmail = headerView.findViewById(R.id.txtEmail);
+        txtName.setText(session.getName());
+        txtEmail.setText(session.getEmail());
         // Passing each menu ID as a set of Ids because each
 
         // menu should be considered as top level destinations.
