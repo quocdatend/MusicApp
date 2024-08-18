@@ -27,11 +27,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.android.MediaManager;
+import com.example.musicapp.DAO.Artist_DAO;
 import com.example.musicapp.DAO.Song_DAO;
 import com.example.musicapp.DAO.StyleDAO;
+import com.example.musicapp.DAO.User_DAO;
 import com.example.musicapp.R;
 import com.example.musicapp.databinding.ActivityPlayingSongBinding;
 import com.example.musicapp.models.DatabaseHelper;
+import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.example.musicapp.models.Song;
 import com.example.musicapp.models.Style;
 import com.squareup.picasso.Picasso;
@@ -60,6 +64,9 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
     private ImageView ivSongImage;
     private Cloudinary cloudinary;
     private StyleDAO styleDAO;
+
+    Session session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +82,7 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         songDao = new Song_DAO(dbHelper);
         styleDAO = new StyleDAO(dbHelper);
+        session = SessionManager.getInstance().getSession();
         setupUI();
         getDataFromList();
         initializeMediaPlayer();
@@ -107,7 +115,7 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void updateFavoriteButtonStatus() {
-        isFavorite = songDao.checkfavMusic(1, currentSong.getId());
+        isFavorite = songDao.checkfavMusic(session.getCode(), currentSong.getId());
         Log.e("isFavorite",String.valueOf(isFavorite));
         binding.btnfavorate.setImageResource(isFavorite ? R.drawable.baseline_favorite_24 : R.drawable.baseline_favorite_border_24);
     }
@@ -144,9 +152,9 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View v) {
                 if (isFavorite == true){
-                    songDao.deleteFavorate_Song(1,currentSong.getId());
+                    songDao.deleteFavorate_Song(session.getCode(),currentSong.getId());
                 }else {
-                    songDao.addfavMusic(1,currentSong.getId());
+                    songDao.addfavMusic(session.getCode(),currentSong.getId());
                 }
                 updateFavoriteButtonStatus();
             }
