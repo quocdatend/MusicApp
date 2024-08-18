@@ -28,8 +28,10 @@ import com.example.musicapp.databinding.ActivityLoginBinding;
 import com.example.musicapp.models.Admin;
 import com.example.musicapp.models.Artists;
 import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.example.musicapp.models.Users;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
@@ -125,6 +127,10 @@ public class LoginActivity extends AppCompatActivity {
                         session.setPassword(password);
                         session.setEmail(userList.get(0).getEmail());
                         session.setRole(2);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        SessionManager.getInstance().setSession(session);
+                        startActivity(intent);
+                        finish();
                     }
                 } else if (adminList.toArray().length != 0){
                     // check password
@@ -141,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                         session.setEmail(adminList.get(0).getEmail());
                         session.setRole(1);
                         Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                        SessionManager.getInstance().setSession(session);
                         startActivity(intent);
                         finish();
                     }
@@ -158,6 +165,10 @@ public class LoginActivity extends AppCompatActivity {
                         session.setPassword(password);
                         session.setEmail(artistsList.get(0).getEmail());
                         session.setRole(3);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        SessionManager.getInstance().setSession(session);
+                        startActivity(intent);
+                        finish();
                     }
                 }
             }
