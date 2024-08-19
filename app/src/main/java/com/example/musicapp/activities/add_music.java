@@ -30,6 +30,8 @@ import com.example.musicapp.adapters.SongsAdapter;
 import com.example.musicapp.adapters.StylesAdapter;
 import com.example.musicapp.databinding.ActivityAddMusicBinding;
 import com.example.musicapp.models.DatabaseHelper;
+import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.example.musicapp.models.Song;
 import com.example.musicapp.DAO.Song_DAO;
 import com.example.musicapp.models.Style;
@@ -64,7 +66,7 @@ public class add_music extends AppCompatActivity {
     private Mp3Uploader mp3Uploader;
     private List<Style> styles;
     private Style styleselect;
-
+    Session session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +86,7 @@ public class add_music extends AppCompatActivity {
 //        MediaManager.init(this, config);
         cloudinary = new Cloudinary(config);
         Spinner spinnerStyle = findViewById(R.id.spinnerAlbums);
+        session = SessionManager.getInstance().getSession();
         setupUI();
         loadData();
         Addevent();
@@ -134,7 +137,8 @@ public class add_music extends AppCompatActivity {
     }
     private List<Song> initData() {
         if (songDao != null) {
-            return songDao.getAllMusicRecords();
+            Intent intent = getIntent();
+            return songDao.getAllMusicRecordsByArtistId(1);
         } else {
             Log.e("ListMusicActivity", "Song_DAO không được khởi tạo.");
             return new ArrayList<>();
@@ -205,6 +209,7 @@ public class add_music extends AppCompatActivity {
                                     song.setLinkMusic(mp3Url);
                                     Log.e("aksjdkasjdk MP3LINK", mp3Url);
                                     songDao.addMusicRecord(song);
+                                    songDao.insertArtistSong(1,song.getId());
                                     Toast.makeText(add_music.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                                     loadData();
                                 }
