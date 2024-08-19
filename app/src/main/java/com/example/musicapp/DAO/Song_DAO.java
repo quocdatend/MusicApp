@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.musicapp.models.Album;
+import com.example.musicapp.models.Comment;
 import com.example.musicapp.models.Song;
 import com.example.musicapp.models.Style;
 
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Song_DAO {
     private SQLiteOpenHelper dbHelper;
@@ -284,5 +286,51 @@ public class Song_DAO {
         cursor.close();
         db.close();
         return musicList;
+    }
+    public List<Comment> getAllCommentsBySongId(int songId) {
+        List<Comment> commentList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT * FROM COMMENTS WHERE ID_SONG = ?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(songId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Comment comment = new Comment(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("TITLE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("TIME_COMMENT")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("LIKES")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("DISLIKES")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_USER")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_SONG"))
+                );
+                commentList.add(comment);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return commentList;
+    }
+    public void addComment(String title, int userId, int songId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // Set the title, userId, and songId provided by the user
+        values.put("TITLE", title);
+        values.put("ID_USER", userId);
+        values.put("ID_SONG", songId);
+
+        // Set the current time as the timeComment
+        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+        values.put("TIME_COMMENT", currentTime);
+
+        // Initialize likes and dislikes to 0
+        values.put("LIKES", 0);
+        values.put("DISLIKES", 0);
+
+        // Insert the new row into the COMMENTS table
+        db.insert("COMMENTS", null, values);
+
+        db.close(); // Close the database connection
     }
 }
