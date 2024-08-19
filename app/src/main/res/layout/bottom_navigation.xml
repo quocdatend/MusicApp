@@ -44,7 +44,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@drawable/baseline_library_music_24"
+        android:src="@drawable/baseline_info_24"
         android:background="?attr/selectableItemBackground"
         android:padding="12dp"
         android:scaleType="centerInside"

@@ -66,6 +66,31 @@ public class User_DAO {
         db.close();
         return userList;
     }
+    public Users getUserById(int id) {
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM USERS WHERE ID = ?", new String[]{String.valueOf(id)});
+
+        Users user = null; // Khởi tạo user là null
+        if (cursor.moveToFirst()) {
+            // Lấy các giá trị từ cursor
+            int userId = cursor.getInt(cursor.getColumnIndexOrThrow("ID"));
+            String username = cursor.getString(cursor.getColumnIndexOrThrow("USERNAME"));
+            String password = cursor.getString(cursor.getColumnIndexOrThrow("PASS"));
+            String email = cursor.getString(cursor.getColumnIndexOrThrow("EMAIL"));
+            String avatarUrl = cursor.getString(cursor.getColumnIndexOrThrow("AVATAR_URL"));
+            String avatarDefault = cursor.getString(cursor.getColumnIndexOrThrow("DEFAULT_AVATAR"));
+
+            // Tạo đối tượng Users
+            user = new Users(userId, username, password, email, avatarUrl, avatarDefault);
+        }
+
+        cursor.close(); // Đóng cursor
+        db.close(); // Đóng database
+
+        return user; // Trả về đối tượng Users (có thể là null nếu không tìm thấy)
+    }
+
+
     // delete user by id
     public void deleteUserById(int id) {
         db = dbHelper.getWritableDatabase();
