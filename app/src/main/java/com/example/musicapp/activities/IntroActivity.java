@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cloudinary.android.MediaManager;
 import com.example.musicapp.adapters.UserAdapter;
 import com.example.musicapp.databinding.ActivityIntroBinding;
 
@@ -18,6 +19,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IntroActivity extends AppCompatActivity {
     ActivityIntroBinding binding;
@@ -30,7 +33,15 @@ public class IntroActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityIntroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        try {
+            MediaManager.get();
+        } catch (IllegalStateException e) {
+            Map<String, String> config = new HashMap<>();
+            config.put("cloud_name", "dap6ivvwp");
+            config.put("api_key", "875469923979388");
+            config.put("api_secret", "sT_lEC69UilqcB6NB6Fhn6kaZqU");
+            MediaManager.init(this, config);
+        }
         prepareDB();
         addEvents();
     }

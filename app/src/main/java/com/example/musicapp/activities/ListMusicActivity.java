@@ -21,6 +21,8 @@ import com.example.musicapp.adapters.SongsAdapter;
 import com.example.musicapp.databinding.ActivityListMusicBinding;
 import com.example.musicapp.fragments.NowPlayingFragmentBottom;
 import com.example.musicapp.models.DatabaseHelper;
+import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.example.musicapp.models.Song;
 import com.example.musicapp.DAO.Song_DAO;
 
@@ -36,6 +38,8 @@ public class ListMusicActivity extends AppCompatActivity {
     FrameLayout frag_bottom_player;
     private Song_DAO songDao;
     boolean check = false;
+    Session session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +49,12 @@ public class ListMusicActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         songDao = new Song_DAO(dbHelper);
         frag_bottom_player = findViewById(R.id.frag_bottom_player);
+        session = SessionManager.getInstance().getSession();
         loadData();
         addEvents();
         getdatafrommain();
         initbutonView();
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -121,18 +127,15 @@ public class ListMusicActivity extends AppCompatActivity {
         ImageButton btnBrowser = findViewById(R.id.btnBrowser);
         ImageButton btnSearch = findViewById(R.id.btnSearch);
         ImageButton btnLibrary = findViewById(R.id.btnLibrary);
-        if(!check){
-            btnBrowser.setColorFilter(getResources().getColor(R.color.black));
-        }else {
-            btnLibrary.setColorFilter(getResources().getColor(R.color.black));
-        }
+
+        btnBrowser.setColorFilter(getResources().getColor(R.color.black));
+
         btnHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         });
         btnBrowser.setOnClickListener(v -> {
-            List<Song> categorysong = songDao.getAllSongsByUserId(1);
-            System.out.println(categorysong.toString());
+            List<Song> categorysong = songDao.getAllSongsByUserId(session.getCode());
             Intent intent = new Intent(this, ListMusicActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("listsong", (Serializable) categorysong);
@@ -144,7 +147,7 @@ public class ListMusicActivity extends AppCompatActivity {
             startActivity(intent);
         });
         btnLibrary.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ListMusicActivity.class);
+            Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         });
     }
