@@ -116,13 +116,13 @@ public class RegisterActivity extends AppCompatActivity {
                    dialog.show();
                } else {
                    // Kiểm tra username đã tồn tại hay chưa
-                   if(userDao.getUserByUsername(username.getText().toString()).toArray().length != 0 && adminDao.getAdminByName(username.getText().toString()).toArray().length != 0 && artistDao.getArtistByName(username.getText().toString()).toArray().length != 0) {
+                   if(userDao.getUserByUsername(username.getText().toString()).toArray().length != 0 || adminDao.getAdminByName(username.getText().toString()).toArray().length != 0 || artistDao.getArtistByName(username.getText().toString()).toArray().length != 0) {
                        // Hiển thị thông báo lỗi và thay text view lỗi
                        txtError.setText("Username already exists");
                        dialog.show();
                    }
                    // Kiểm tra email đã tồn tại hay chưa
-                   else if(userDao.getUserByEmail(email.getText().toString()).toArray().length != 0 && adminDao.getAdminByEmail(email.getText().toString()).toArray().length != 0 && artistDao.getArtistByEmail(email.getText().toString()).toArray().length != 0) {
+                   else if(userDao.getUserByEmail(email.getText().toString()).toArray().length != 0 || adminDao.getAdminByEmail(email.getText().toString()).toArray().length != 0 || artistDao.getArtistByEmail(email.getText().toString()).toArray().length != 0) {
                        // Hiển thị thông báo lỗi và thay text view lỗi
                        txtError.setText("Email already exists");
                        dialog.show();
