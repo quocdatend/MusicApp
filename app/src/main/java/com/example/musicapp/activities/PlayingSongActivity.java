@@ -37,6 +37,7 @@ import com.example.musicapp.DAO.User_DAO;
 import com.example.musicapp.R;
 import com.example.musicapp.adapters.CommentAdapter;
 import com.example.musicapp.databinding.ActivityPlayingSongBinding;
+import com.example.musicapp.models.Comment;
 import com.example.musicapp.models.DatabaseHelper;
 import com.example.musicapp.models.Session;
 import com.example.musicapp.models.SessionManager;
@@ -71,15 +72,12 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
     private List<String> comments;
     private CommentAdapter commentAdapter;
     Session session;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityPlayingSongBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        comments = new ArrayList<>();
-        commentAdapter = new CommentAdapter(this, comments);
         Map<String, String> config = new HashMap<>();
         config.put("cloud_name", "dap6ivvwp");
         config.put("api_key", "875469923979388");
@@ -417,16 +415,18 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
         dialog.show();
     }
     private void showCommentDialog() {
+        List<Comment> comments1 = songDao.getAllCommentsBySongId(currentSong.getId());
+        List<String> comments = new ArrayList<>();
+        if (comments1 != null && comments1.size() > 0) {
+            for (Comment comment : comments1) {
+                comments.add(comment.getTitle());
+            }
+        }
+        commentAdapter = new CommentAdapter(this, comments);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_comment, null);
-
         ListView listViewComments = dialogView.findViewById(R.id.listViewComments);
-        EditText etComment = dialogView.findViewById(R.id.etComment);
-        Button btnSubmitComment = dialogView.findViewById(R.id.btnSubmitComment);
-
-        // Set the adapter for the ListView
         listViewComments.setAdapter(commentAdapter);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Comments")
                 .setView(dialogView)
@@ -436,19 +436,24 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
                         dialog.dismiss();
                     }
                 });
-
         AlertDialog dialog = builder.create();
         dialog.show();
-
+        EditText etComment = dialogView.findViewById(R.id.etComment);
+        Button btnSubmitComment = dialogView.findViewById(R.id.btnSubmitComment);
         btnSubmitComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String newComment = etComment.getText().toString().trim();
                 if (!newComment.isEmpty()) {
-                    // Add the new comment to the list and notify the adapter
-                    comments.add(newComment);
+                    songDao.addComment(newComment, session.getCode(), currentSong.getId());
+                    List<Comment> updatedComments = songDao.getAllCommentsBySongId(currentSong.getId());
+                    comments.clear();
+                    if (updatedComments != null && updatedComments.size() > 0) {
+                        for (Comment comment : updatedComments) {
+                            comments.add(comment.getTitle());
+                        }
+                    }
                     commentAdapter.notifyDataSetChanged();
-                    etComment.setText(""); // Clear the input field
                 } else {
                     Toast.makeText(PlayingSongActivity.this, "Please enter a comment", Toast.LENGTH_SHORT).show();
                 }

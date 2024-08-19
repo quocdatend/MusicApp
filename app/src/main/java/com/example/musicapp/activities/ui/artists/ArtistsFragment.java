@@ -1,11 +1,13 @@
 package com.example.musicapp.activities.ui.artists;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,14 +35,19 @@ public class ArtistsFragment extends Fragment {
         binding = FragmentArtistsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         final ListView listView = binding.lvArtist;
+        final Button btnAdd = binding.btnAddArtist;
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddArtistAdmin.class);
+            startActivity(intent);
+        });
         artistAdapter = new ArtistAdapter(requireContext());
         ArrayList<Artists> artists = (ArrayList<Artists>) artistAdapter.getAllArtists();
-        ArrayAdapter<Artists> adapter = new ArrayAdapter<Artists>(requireContext(), R.layout.content_user_admin, artists) {
+        ArrayAdapter<Artists> adapter = new ArrayAdapter<Artists>(requireContext(), R.layout.content_artist_admin, artists) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(R.layout.content_user_admin, parent, false);
+                    convertView = getLayoutInflater().inflate(R.layout.content_artist_admin, parent, false);
                 }
 
                 Artists artist = getItem(position);
