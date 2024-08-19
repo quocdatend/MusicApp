@@ -1,6 +1,7 @@
 package com.example.musicapp.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -12,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ import com.example.musicapp.DAO.Song_DAO;
 import com.example.musicapp.DAO.StyleDAO;
 import com.example.musicapp.DAO.User_DAO;
 import com.example.musicapp.R;
+import com.example.musicapp.adapters.CommentAdapter;
 import com.example.musicapp.databinding.ActivityPlayingSongBinding;
 import com.example.musicapp.models.DatabaseHelper;
 import com.example.musicapp.models.Session;
@@ -64,7 +68,8 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
     private ImageView ivSongImage;
     private Cloudinary cloudinary;
     private StyleDAO styleDAO;
-
+    private List<String> comments;
+    private CommentAdapter commentAdapter;
     Session session;
 
     @Override
@@ -73,6 +78,8 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
         EdgeToEdge.enable(this);
         binding = ActivityPlayingSongBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        comments = new ArrayList<>();
+        commentAdapter = new CommentAdapter(this, comments);
         Map<String, String> config = new HashMap<>();
         config.put("cloud_name", "dap6ivvwp");
         config.put("api_key", "875469923979388");
@@ -157,6 +164,12 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
                     songDao.addfavMusic(session.getCode(),currentSong.getId());
                 }
                 updateFavoriteButtonStatus();
+            }
+        });
+        binding.btnComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCommentDialog();
             }
         });
     }
@@ -403,5 +416,43 @@ public class PlayingSongActivity extends AppCompatActivity implements View.OnCli
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+    private void showCommentDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_comment, null);
 
+        ListView listViewComments = dialogView.findViewById(R.id.listViewComments);
+        EditText etComment = dialogView.findViewById(R.id.etComment);
+        Button btnSubmitComment = dialogView.findViewById(R.id.btnSubmitComment);
+
+        // Set the adapter for the ListView
+        listViewComments.setAdapter(commentAdapter);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Comments")
+                .setView(dialogView)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        btnSubmitComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newComment = etComment.getText().toString().trim();
+                if (!newComment.isEmpty()) {
+                    // Add the new comment to the list and notify the adapter
+                    comments.add(newComment);
+                    commentAdapter.notifyDataSetChanged();
+                    etComment.setText(""); // Clear the input field
+                } else {
+                    Toast.makeText(PlayingSongActivity.this, "Please enter a comment", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }
