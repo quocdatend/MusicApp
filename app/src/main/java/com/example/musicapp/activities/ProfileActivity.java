@@ -49,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     Uri uri;
     private boolean check_user = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,20 +63,30 @@ public class ProfileActivity extends AppCompatActivity {
         config.put("cloud_name", "dap6ivvwp");
         config.put("api_key", "875469923979388");
         config.put("api_secret", "sT_lEC69UilqcB6NB6Fhn6kaZqU");
-//        MediaManager.init(this, config);
         cloudinary = new Cloudinary(config);
         addEvents();
         loadData();
+        button();
     }
+
     private void loadData() {
-        Users user = userDao.getUserByEmail("duydatphung7@gmail.com").get(0);
-        Artists artist = artistDao.getArtistByEmail(session.getEmail()).get(0);
+        int check = session.getRole();
+        System.out.println(session.getCode());
+        Users user = null;
+        Artists artist = null;
+        if (check == 2) {
+            user =  userDao.getUserById(session.getCode());
+            binding.btnAlbum1.setVisibility(View.GONE);
+            binding.btnSong.setVisibility(View.GONE);
+            binding.btnStyle.setVisibility(View.GONE);
+        } else {
+            artist =  artistDao.findArtistById(session.getCode());
+        }
         if (artist != null) {
             binding.txtArtist.setText("Yes");
             binding.txtName.setText(artist.getName());
             binding.txtEmail.setText(artist.getEmail());
             binding.txtIsAuthor.setText("Bạn đã là nhà sáng tác!");
-            // close event click txtIsAuthor
             binding.txtIsAuthor.setOnClickListener(null);
             String fullUrl = artist.getAvatar();
             if (fullUrl != null) {
@@ -148,7 +159,7 @@ public class ProfileActivity extends AppCompatActivity {
                     artistDao.addRoleArtist(artistDao.getArtistByEmail(session.getEmail()).get(0).getId(), 3);
                     // delete role user
                     userDao.deleteUserRoleByUserId(user.getId());
-                    // delete album, comment,... of user if exist
+                    // delete comment,favourite... of user if exist
 
                     // TO DO
 
@@ -194,15 +205,16 @@ public class ProfileActivity extends AppCompatActivity {
                 uploader.uploadImage(this, uri, new ImageUploader.UploadCallbackListener() {
                     @Override
                     public void onUploadSuccess(String url) {
-                        if (check_user){
+                        if (check_user) {
                             userDao.updateAvatarUser(1, url);
-                        }else {
-                            artistDao.updateAvatarArtist(1,url);
+                        } else {
+                            artistDao.updateAvatarArtist(1, url);
                         }
 
                         addEvents();
                         loadData();
                     }
+
                     @Override
                     public void onUploadError(String error) {
                         Toast.makeText(ProfileActivity.this, "Image upload failed: " + error, Toast.LENGTH_SHORT).show();
@@ -213,5 +225,26 @@ public class ProfileActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+    public void button(){
+        binding.btnSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, add_music.class);
+                startActivity(intent);            }
+        });
+        binding.btnAlbum1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, Crud_album.class);
+                startActivity(intent);
+            }
+        });
+        binding.btnStyle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, edit_Style_Music.class);
+                startActivity(intent);            }
+        });
     }
 }

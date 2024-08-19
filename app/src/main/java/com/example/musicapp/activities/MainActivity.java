@@ -27,6 +27,8 @@ import com.example.musicapp.category.Category;
 import com.example.musicapp.databinding.ActivityMainBinding;
 import com.example.musicapp.models.Album;
 import com.example.musicapp.models.DatabaseHelper;
+import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.example.musicapp.models.Song;
 import com.example.musicapp.utils.OnCategoryClickListener;
 
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnCategoryClickLi
     private Cloudinary cloudinary;
     private TextView txt_MusicForYou;
     private AlbumDAO albumDAO;
+
+    Session session;
     private Runnable mrunnable = new Runnable() {
         @Override
         public void run() {
@@ -74,14 +78,18 @@ public class MainActivity extends AppCompatActivity implements OnCategoryClickLi
         mviewPager2.setOffscreenPageLimit(3);
         mviewPager2.setClipToPadding(false);
         mviewPager2.setClipChildren(false);
+        session = SessionManager.getInstance().getSession();
+        System.out.println(session.getCode());
 
-        Map<String, String> config = new HashMap<>();
-        config.put("cloud_name", "dap6ivvwp");
-        config.put("api_key", "875469923979388");
-        config.put("api_secret", "sT_lEC69UilqcB6NB6Fhn6kaZqU");
-        MediaManager.init(this, config);
-
-        cloudinary = new Cloudinary(config);
+        try {
+            MediaManager.get();
+        } catch (IllegalStateException e) {
+            Map<String, String> config = new HashMap<>();
+            config.put("cloud_name", "dap6ivvwp");
+            config.put("api_key", "875469923979388");
+            config.put("api_secret", "sT_lEC69UilqcB6NB6Fhn6kaZqU");
+            MediaManager.init(this, config);
+        }
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer(new MarginPageTransformer(40));
         mviewPager2.setPageTransformer(compositePageTransformer);
@@ -181,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements OnCategoryClickLi
             startActivity(intent);
         });
         btnBrowser.setOnClickListener(v -> {
-            List<Song> categorysong = songDao.getAllSongsByUserId(1);
+            List<Song> categorysong = songDao.getAllSongsByUserId(session.getCode());
             Intent intent = new Intent(this, ListMusicActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("listsong", (Serializable) categorysong);
@@ -193,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements OnCategoryClickLi
             startActivity(intent);
         });
         btnLibrary.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ListMusicActivity.class);
+            Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         });
     }

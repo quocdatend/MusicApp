@@ -140,4 +140,22 @@ public class Artists {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public String toString() {
+        return "Artists{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", biography='" + biography + '\'' +
+                ", stageName='" + stageName + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", debugYear='" + debugYear + '\'' +
+                ", albumsCount=" + albumsCount +
+                ", website='" + website + '\'' +
+                ", genreId=" + genreId +
+                ", avatar='" + avatar + '\'' +
+                '}';
+    }
 }
