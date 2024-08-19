@@ -67,7 +67,51 @@ public class Song_DAO {
         db.close();
         return musicList;
     }
+    public List<Song> getAllMusicRecordsByArtistId(int artistId) {
+        List<Song> musicList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        // SQL query to get songs associated with a specific artist ID
+        String selectQuery = "SELECT s.* FROM SONGS s " +
+                "JOIN ARTISTS_SONG a ON s.ID = a.ID_SONG " +
+                "WHERE a.ID_ARTIST = ?";
+
+        // Execute the query with the artist ID as a parameter
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(artistId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Song musicItem = new Song(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("TITLE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("DURATION")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("THUMBNAILURL")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("LYRICS")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("LANGUAGE")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_ALBUM")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_SLINK")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("ID_STYLE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("Link_Music"))
+                );
+                musicList.add(musicItem);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return musicList;
+    }
+    // Method to insert data into ARTISTS_SONG table
+    public void insertArtistSong(int artistId, int songId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("ID_ARTIST", artistId);
+        values.put("ID_SONG", songId);
+
+        db.insert("ARTISTS_SONG", null, values);
+        db.close();
+    }
     public List<Song> getAllMusicByAlbumId(int albumId) {
         List<Song> musicList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

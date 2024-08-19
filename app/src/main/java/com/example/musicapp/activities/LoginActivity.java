@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Check username and password
                 List<Users> userList = userDao.getUserByUsername(username);
                 List<Admin> adminList = adminDao.getAdminByName(username);
-                List<Artists> artistsList = artistDao.getArtistByEmail(username);
+                List<Artists> artistsList = artistDao.getArtistByName(username);
                 if((String.valueOf(userList.toArray().length).equals("0")) && (String.valueOf(adminList.toArray().length).equals("0")) && (String.valueOf(artistsList.toArray().length).equals("0"))) {
                     dialog.setContentView(R.layout.dialog_error);
                     TextView txtError = dialog.findViewById(R.id.txtError);

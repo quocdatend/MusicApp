@@ -23,6 +23,8 @@ import com.example.musicapp.adapters.SongsAdapter;
 import com.example.musicapp.adapters.StylesAdapter;
 import com.example.musicapp.databinding.ActivityFindMusicBinding;
 import com.example.musicapp.models.DatabaseHelper;
+import com.example.musicapp.models.Session;
+import com.example.musicapp.models.SessionManager;
 import com.example.musicapp.models.Song;
 import com.example.musicapp.models.Style;
 
@@ -47,6 +49,7 @@ public class FindMusic extends AppCompatActivity {
     StylesAdapter styleAdapter;
     private List<Style> styles;
     private Style styleselect;
+    Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class FindMusic extends AppCompatActivity {
         songs = new ArrayList<>();
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         styleDAO = new StyleDAO(dbHelper);
+        session = SessionManager.getInstance().getSession();
 
         songDao = new Song_DAO(dbHelper);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -175,14 +179,15 @@ public class FindMusic extends AppCompatActivity {
         ImageButton btnBrowser = findViewById(R.id.btnBrowser);
         ImageButton btnSearch = findViewById(R.id.btnSearch);
         ImageButton btnLibrary = findViewById(R.id.btnLibrary);
-        btnSearch.setColorFilter(getResources().getColor(R.color.black));
+
+        btnHome.setColorFilter(getResources().getColor(R.color.black));
+
         btnHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         });
         btnBrowser.setOnClickListener(v -> {
-            List<Song> categorysong = songDao.getAllSongsByUserId(1);
-            System.out.println(categorysong.toString());
+            List<Song> categorysong = songDao.getAllSongsByUserId(session.getCode());
             Intent intent = new Intent(this, ListMusicActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("listsong", (Serializable) categorysong);
@@ -194,11 +199,10 @@ public class FindMusic extends AppCompatActivity {
             startActivity(intent);
         });
         btnLibrary.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ListMusicActivity.class);
+            Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         });
     }
-
     private void loadSnipper() {
         List<Style> allStyles = styleDAO.getAllStyles();
         if (allStyles != null && !allStyles.isEmpty()) {
