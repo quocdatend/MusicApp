@@ -180,7 +180,7 @@ public class FindMusic extends AppCompatActivity {
         ImageButton btnSearch = findViewById(R.id.btnSearch);
         ImageButton btnLibrary = findViewById(R.id.btnLibrary);
 
-        btnHome.setColorFilter(getResources().getColor(R.color.black));
+        btnSearch.setColorFilter(getResources().getColor(R.color.black));
 
         btnHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity.class);
